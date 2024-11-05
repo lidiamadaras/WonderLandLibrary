@@ -1,0 +1,19 @@
+{
+  "name": "librarywebsite",
+  "version": "1.0.0",
+  "description": "Project for Software class\r Website created for a Library enabling users to login, search for and borrow books, and additional features.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
