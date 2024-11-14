@@ -1,7 +1,7 @@
 // morgan importálása
 import express from 'express';
 import morgan from 'morgan';
-import axios from 'axios';
+
 
 const app = express();
 const port = 3000;
