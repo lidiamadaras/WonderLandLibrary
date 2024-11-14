@@ -2,18 +2,22 @@
   "name": "librarywebsite",
   "version": "1.0.0",
   "description": "Project for Software class\r Website created for a Library enabling users to login, search for and borrow books, and additional features.",
-  "main": "index.js",
+  "type": "module",
+  "main": "src/app.mjs",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node src/app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.1"
+    "axios": "^1.7.7",
+    "express": "^4.21.1",
+    "morgan": "^1.10.0",
+    "openai": "^4.71.0"
   }
 }
