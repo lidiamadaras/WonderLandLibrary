@@ -1,0 +1,103 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%; /* Make sure the body takes up full height */
+  }
+  
+  /* Body styling */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Light background for the whole body */
+    display: flex;
+    flex-direction: column; /* Flexbox layout for the whole page */
+  }
+  
+  /* Layout Container */
+  .layout-container {
+    display: flex;
+    justify-content: space-between;
+    height: 100vh; /* Full height of the viewport */
+    margin-top: 20px; /* Space between navbar and content */
+  }
+  
+  /* Sidebars */
+  .sidebar-left, .sidebar-right {
+    width: 20%; /* Width of the sidebars */
+    background-color: #e4dfe6;
+    padding: 15px;
+    text-align: center; /* Center-align text */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow effect */
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Allow scrolling if the sidebar content exceeds the height */
+  }
+  
+  .sidebar-left {
+    margin-right: 20px; /* Space between left sidebar and content */
+  }
+  
+  .sidebar-right {
+    margin-left: 20px; /* Space between right sidebar and content */
+  }
+  
+  /* Main Content Area */
+  .main-content {
+    flex: 1; /* Takes up the remaining space between the sidebars */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh; /* Full height of the viewport */
+  }
+  
+  .box {
+    width: 100%;
+    max-width: 1200px; /* Limit the maximum width of the content box */
+    background-color: #fff; /* White background for the content area */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(50, 31, 46, 0.1); /* Optional: shadow for the content box */
+    border-radius: 8px; /* Optional: rounded corners for the content box */
+    overflow-y: auto; /* Enable scrolling if content exceeds the height */
+    height: 100%; /* Ensure the box takes full height */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    /* Stack the layout vertically on smaller screens */
+    .layout-container {
+      flex-direction: column; /* Stack sidebars and content */
+    }
+  
+    .sidebar-left, .sidebar-right {
+      width: 100%; /* Make sidebars take full width */
+      margin: 0; /* Remove margins */
+      padding: 10px; /* Adjust padding for smaller screens */
+      height: auto; /* Let the sidebar height adjust according to content */
+    }
+  
+    .main-content {
+      width: 100%; /* Make main content take full width */
+    }
+  
+    .box {
+      max-width: 100%; /* Box takes full width */
+      padding: 15px; /* Adjust padding for smaller screens */
+    }
+  }
+  
+  /* Optional: Styling for Sidebar Text */
+  .sidebar-left p, .sidebar-right p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333; /* Dark gray color for text */
+  }
+  
+  /* Styling for the content area */
+  .main-content p {
+    font-size: 18px;
+    color: #333; /* Dark gray color for text */
+  }
+  
