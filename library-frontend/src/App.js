@@ -11,12 +11,10 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <div class="app-title">
+      <div className="app-title">
         <h1>Wonderland Library</h1>
-        <Main /> 
-
-
       </div>
+      <Main /> 
     </Router>
   );
 }

@@ -1,39 +1,48 @@
-/* NavBar.css */
-
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-  }
-  
-  /* Styling for main menu */
-  .main-menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .main-menu li {
-    display: inline;
-  }
-  
-  .main-menu li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  /* Styling for Login link in the upper right corner */
-  .login-link {
-    margin-left: auto; /* Pushes the Login link to the far right */
-  }
-  
-  .login-link a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(160, 146, 172);
+  width: 100%;
+
+}
+
+/* Styling for main menu */
+.main-menu {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 15px;
+}
+
+.main-menu li {
+  display: inline;
+}
+
+.main-menu li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: 'Arial', sans-serif;
+  transition: color 0.3s;
+}
+
+/* Styling for the Login link */
+.login-link a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: 'Arial', sans-serif;
+  transition: color 0.3s;
+  padding: 15px;
+  padding-right: 5px;
+}
+
+/* Hover effect for links */
+.main-menu li a:hover,
+.login-link a:hover {
+  color: #007bff;
+}
