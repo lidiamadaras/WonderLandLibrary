@@ -29,13 +29,18 @@ export const getBookByIdController = async (req, res) => {
 export const getBookByNameController = async (req, res) => {
   const { name } = req.query;
 
+  if (!name) {
+    return res.status(400).json({ error: 'A név megadása kötelező a kereséshez.' });
+  }
+
   try {
-    const books = await getBookByName(name);
+    const books = await getBookByName(name); // Adatbázis hívás
     if (books.length === 0) {
       return res.status(404).json({ error: 'A megadott névvel nem található könyv.' });
     }
     res.status(200).json({ books });
   } catch (error) {
+    console.error('Hiba a név szerinti lekérdezés során:', error.message);
     res.status(500).json({ error: 'Nem sikerült a könyvet név alapján lekérdezni.' });
   }
 };

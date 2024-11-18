@@ -15,3 +15,7 @@ router.get('/search', getBookByNameController);
 
 // Könyv lekérdezése ID alapján
 router.get('/:id', getBookByIdController);
+
+
+
+export default router;

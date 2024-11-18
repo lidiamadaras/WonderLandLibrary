@@ -10,7 +10,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Útvonalak regisztrálása
-app.use('/api', bookRoutes);
+app.use('/api/books', bookRoutes);
 
 // Hibakezelő middleware
 app.use((err, req, res, next) => {
