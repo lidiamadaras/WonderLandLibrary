@@ -2,18 +2,16 @@ import express from 'express';
 import {
   getAllBooksController,
   getBookByIdController,
-  getBookByNameController
+  getBookByNameController,
 } from '../controllers/bookController.mjs';
 
 const router = express.Router();
 
 // Összes könyv lekérdezése
-router.get('/books', getAllBooksController);
-
-// Könyv lekérdezése ID alapján
-router.get('/books/:id', getBookByIdController);
+router.get('/', getAllBooksController);
 
 // Könyv lekérdezése név alapján
-router.get('/books', getBookByNameController);
+router.get('/search', getBookByNameController);
 
-export default router;
+// Könyv lekérdezése ID alapján
+router.get('/:id', getBookByIdController);

@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import bookRoutes from './routes/bookRoutes.mjs';
 
 const app = express();
-const port = 3000;
+const port = 5000;
 
 // Middleware-k
 app.use(morgan('dev'));
