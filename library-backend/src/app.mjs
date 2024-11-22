@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import bookRoutes from './routes/bookRoutes.mjs';
+import userRoutes from './routes/userRoutes.mjs';
 
 const app = express();
 const port = 5000;
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // Útvonalak regisztrálása
 app.use('/api/books', bookRoutes);
+app.use('/api/users', userRoutes);
 
 // Hibakezelő middleware
 app.use((err, req, res, next) => {
