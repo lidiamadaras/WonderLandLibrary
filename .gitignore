@@ -1,2 +1,4 @@
 node_modules/
 library-frontend/.gitignore
+library_backend/.env
+library-backend/src/.env
