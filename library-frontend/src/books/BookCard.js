@@ -6,15 +6,16 @@ const BookCard = ({ book }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/book/${book.id}`); // Replace with your route
+    console.log('Book:', book);
+    navigate(`/books/${book.bookid}`); // Replace with your route
   };
+
 
   return (
     <div className="book-card" onClick={handleCardClick}>
-      <img src={book.image} alt={book.title} className="book-image" />
-      <h3>{book.title}</h3>
-      <p className="book-author">By {book.author}</p>
-      <p className="book-description">{book.description}</p>
+      <h3>{book.booktitle}</h3>
+      <p className="book-author">By {book.authorname}</p>
+      <p className="book-publishyear">{book.publishyear}</p>
     </div>
   );
 };

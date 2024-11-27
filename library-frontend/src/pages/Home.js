@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../css/Home.css';
-import BookList from '../src/books/BookList';
+import BookList from '../books/BookList';
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState(''); // Search bar value
