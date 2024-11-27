@@ -23,8 +23,8 @@ function Main() {
           <div className="box">
             <Routes>
               <Route path="/" element={<Home />} index />
-              <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />
             </Routes>
           </div>

@@ -1,30 +1,28 @@
-//ebbe lesz a login js logika, amik megtudom oket swappolni
-
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import '../css/Login.css';
-import LoginForm from '../components/LoginForm';
-//import RegisterForm from '../components/RegisterForm';
+//import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
 //this file should be named Register.js
 
 // Login component with redirection after login
-function Login() {
+function Register() {
   const navigate = useNavigate(); // Updated navigation method
 
-  const handleLogin = () => {
+  const handleRegister = () => {
     // Logic for actual login can go here/
     // Redirect to the main page on successful login
     navigate('/main');
-    console.log('User logged in');
+    console.log('User registered');
   };
 
   return (
     <div>
-      <h2>Login</h2>
-      <LoginForm onLogin={handleLogin} />
+      <h2>Register</h2>
+      <RegisterForm onRegister={handleRegister} />
     </div>
   );
 }
 
-export default Login;
+export default Register;
