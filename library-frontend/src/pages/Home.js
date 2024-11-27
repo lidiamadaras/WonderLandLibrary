@@ -97,9 +97,7 @@ function Home() {
        {!loading && books.length > 0 && (
         <BookList books={books} /> 
       )}
-
-      //////////////////////////////
-
+      
       {/* No books found */}
       {!loading && books.length === 0 && !error && (
         <p>No books available to display.</p>

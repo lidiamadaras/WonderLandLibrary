@@ -1,0 +1,66 @@
+.book-details-container {
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .book-detail-title {
+    font-size: 3rem;
+    color: #a22d72; /* Elegant pink/purple for the title */
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 15rem;
+    color: #a22d72; 
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  
+  .book-details-container p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #555;
+    text-align: left;
+  }
+  
+  .book-details-container p strong {
+    font-size: 1.3rem; /* Larger font size for field names */
+    color: #8a1e62; /* Darker elegant pink/purple for field names */
+  }
+  
+  .book-details-container p {
+    color: #3c3c3c; /* Dark grey color for the details */
+  }
+  
+  /* Styling for when the book title is too long, ensure it's wrapped and doesn't overflow */
+  .book-title {
+    word-wrap: break-word;
+  }
+  
+  /* Add some padding between the text and edges */
+  .book-details-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  /* Mobile-friendly styles */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+    }
+    .book-details-container p {
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+  

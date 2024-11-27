@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import '../css/books/BookDetails.css';
 
 const BookDetails = () => {
   const { id } = useParams(); // Get the book ID from the URL
@@ -24,14 +25,15 @@ const BookDetails = () => {
 
   return (
     <div >
-      <h1>{book.booktitle}</h1>
+      <h1 className='book-detail-title'>{book.booktitle}</h1>
       <p><strong>Author:</strong> {book.authorname}</p>
-      <p><strong>ISBN:</strong> {book.isbn}</p>
       <p><strong>Publish Year:</strong> {book.publishyear}</p>
+      <p><strong>Publisher:</strong> {book.publishername}</p>
+      <p><strong>ISBN:</strong> {book.isbn}</p>
       <p><strong>Pages:</strong> {book.pages}</p>
       <p><strong>Total Copies:</strong> {book.copies}</p>
       <p><strong>Available Copies:</strong> {book.availablecopies}</p>
-      <p><strong>Publisher ID:</strong> {book.publisherid}</p>
+      
     </div>
   );
   
