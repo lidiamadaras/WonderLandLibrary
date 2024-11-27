@@ -19,10 +19,15 @@ function Login() {
     console.log('User logged in');
   };
 
+  const handleRegister = () => {
+    console.log('Redirecting to registration page');
+    navigate('/register'); // Navigate to the registration page
+  };
+
   return (
     <div>
       <h2>Login</h2>
-      <LoginForm onLogin={handleLogin} />
+      <LoginForm onLogin={handleLogin} onRegister={handleRegister} />
     </div>
   );
 }

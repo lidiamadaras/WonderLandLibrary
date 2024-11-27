@@ -31,7 +31,7 @@
 }
 
 /* Styling for the Login link */
-.login-link a {
+.login-link a, .register-link a {
   text-decoration: none;
   color: #333;
   font-weight: bold;
@@ -42,8 +42,9 @@
   padding-right: 5px;
 }
 
+
 /* Hover effect for links */
 .main-menu li a:hover,
-.login-link a:hover {
+.login-link a:hover, .register-link a:hover {
   color: #007bff;
 }

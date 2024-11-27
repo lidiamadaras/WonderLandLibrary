@@ -35,7 +35,8 @@ input[type="password"] {
   margin-top: 12px;
 }
 
-.submit-register-button{
-  margin-top: 10px;
+.submit-register-button, .submit-login-button{
+  margin-top: 15px;
+  margin-bottom: 15px;
   width: 45%;
 }

@@ -11,6 +11,7 @@ class LoginForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
@@ -23,6 +24,7 @@ class LoginForm extends React.Component {
   }
 
   render() {
+    const { onRegister } = this.props;
     return (
       <form className="login-form" onSubmit={this.handleSubmit}>
         <label>
@@ -45,8 +47,15 @@ class LoginForm extends React.Component {
           />
         </label>
         <br />
-        <button type="submit">Login</button>
+        <button className="submit-login-button" type="submit">Login</button>
+
+        <h4>Don't have an account? <a href="#" onClick={onRegister}>Sign up</a></h4>
+
+
+
+
       </form>
+      
     );
   }
 }
