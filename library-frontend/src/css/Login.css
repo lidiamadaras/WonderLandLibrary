@@ -1,5 +1,6 @@
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   width: 100%;
   padding: 8px;
@@ -10,4 +11,20 @@ input[type="password"] {
 .login-link {
   background-color: transparent;
   padding: 10px;
+}
+
+.register-form {
+  max-width: 400px; /* Limit the width of the form */
+  margin: 0 auto; /* Center the form horizontally */
+  padding: 20px;
+  border: 1px solid #ccc; /* Optional: Add a border */
+  border-radius: 8px; /* Rounded corners for the form */
+  background-color: #f9f9f9; /* Light background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  margin-top: 12px;
+}
+
+.submit-register-button{
+  margin-top: 10px;
+  width: 45%;
 }

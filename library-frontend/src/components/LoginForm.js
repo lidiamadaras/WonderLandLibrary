@@ -1,10 +1,12 @@
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
+// CHANGE when login api is implemented
+
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { username: '', password: '' };
+    this.state = { email: '', password: '' };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -16,7 +18,7 @@ class LoginForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    alert('A user logged in: ' + this.state.username);
+    alert('A user logged in: ' + this.state.email);
     this.props.onLogin(); // Call onLogin to trigger redirection
   }
 
@@ -24,11 +26,11 @@ class LoginForm extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
-          Username:
+          Email:
           <input
             type="text"
-            name="username"
-            value={this.state.username}
+            name="email"
+            value={this.state.email}
             onChange={this.handleChange}
           />
         </label>
