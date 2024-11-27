@@ -1,34 +1,78 @@
 import pool from '../config/db.mjs';
 
-// Lekérdezés: összes könyv
+
 export const getAllBooks = async () => {
   try {
-    const result = await pool.query('SELECT * FROM Book;');
-    return result.rows; // Az összes könyv adata
+    const query = `
+      SELECT 
+        Book.BookId,
+        Book.BookTitle,
+        CONCAT(Author.AuthorFirstName, ' ', Author.AuthorLastName) AS AuthorName,
+        Book.PublisherID,
+        Book.ISBN,
+        Book.PublishYear,
+        Book.Pages,
+        Book.Copies,
+        Book.AvailableCopies
+      FROM Book
+      JOIN Author ON Book.AuthorID = Author.AuthorID;
+    `;
+    const result = await pool.query(query);
+    return result.rows; // The data of all the books with authors
   } catch (error) {
-    console.error('Hiba az összes könyv lekérdezése során:', error.message);
+    console.error('Error querying all the books', error.message);
     throw error;
   }
 };
 
-// Lekérdezés: könyv ID alapján
+
 export const getBookById = async (id) => {
   try {
-    const result = await pool.query('SELECT * FROM Book WHERE BookID = $1;', [id]);
-    return result.rows[0]; // Egy könyv, vagy undefined, ha nincs találat
+    const query = `
+      SELECT 
+        Book.BookId,
+        Book.BookTitle,
+        CONCAT(Author.AuthorFirstName, ' ', Author.AuthorLastName) AS AuthorName,
+        Book.PublisherID,
+        Book.ISBN,
+        Book.PublishYear,
+        Book.Pages,
+        Book.Copies,
+        Book.AvailableCopies
+      FROM Book
+      JOIN Author ON Book.AuthorID = Author.AuthorID
+      WHERE Book.BookID = $1;
+    `;
+    const result = await pool.query(query, [id]);
+    return result.rows[0]; // A book with the author's name or undefined if not valid
   } catch (error) {
-    console.error('Hiba a könyv lekérdezése során ID alapján:', error.message);
+    console.error('An error occurred during querying by ID', error.message);
     throw error;
   }
 };
 
-// Lekérdezés: könyv név alapján
+
 export const getBookByName = async (name) => {
   try {
-    const result = await pool.query('SELECT * FROM Book WHERE BookTitle ILIKE $1;', [`%${name}%`]);
-    return result.rows; // Tömb a találatokkal
+    const query = `
+      SELECT 
+        Book.BookId,
+        Book.BookTitle,
+        CONCAT(Author.AuthorFirstName, ' ', Author.AuthorLastName) AS AuthorName,
+        Book.PublisherID,
+        Book.ISBN,
+        Book.PublishYear,
+        Book.Pages,
+        Book.Copies,
+        Book.AvailableCopies
+      FROM Book
+      JOIN Author ON Book.AuthorID = Author.AuthorID
+      WHERE Book.BookTitle ILIKE $1;
+    `;
+    const result = await pool.query(query, [`%${name}%`]);
+    return result.rows; // An array with the results including authors' names
   } catch (error) {
-    console.error('Hiba a könyv lekérdezése során név alapján:', error.message);
+    console.error('An error occurred during querying by name', error.message);
     throw error;
   }
 };

@@ -7,13 +7,13 @@ import {
 
 const router = express.Router();
 
-// Összes könyv lekérdezése
+
 router.get('/', getAllBooksController);
 
-// Könyv lekérdezése név alapján
+
 router.get('/search', getBookByNameController);
 
-// Könyv lekérdezése ID alapján
+
 router.get('/:id', getBookByIdController);
 
 
