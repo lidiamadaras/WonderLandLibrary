@@ -8,17 +8,18 @@ export const getAllBooks = async () => {
         Book.BookId,
         Book.BookTitle,
         CONCAT(Author.AuthorFirstName, ' ', Author.AuthorLastName) AS AuthorName,
-        Book.PublisherID,
+        Publisher.PublisherName,
         Book.ISBN,
         Book.PublishYear,
         Book.Pages,
         Book.Copies,
         Book.AvailableCopies
       FROM Book
-      JOIN Author ON Book.AuthorID = Author.AuthorID;
+      JOIN Author ON Book.AuthorID = Author.AuthorID
+      JOIN Publisher ON Book.PublisherID = Publisher.PublisherID;
     `;
     const result = await pool.query(query);
-    return result.rows; // The data of all the books with authors
+    return result.rows; // All books with author and publisher names
   } catch (error) {
     console.error('Error querying all the books', error.message);
     throw error;
@@ -33,7 +34,7 @@ export const getBookById = async (id) => {
         Book.BookId,
         Book.BookTitle,
         CONCAT(Author.AuthorFirstName, ' ', Author.AuthorLastName) AS AuthorName,
-        Book.PublisherID,
+        Publisher.PublisherName,
         Book.ISBN,
         Book.PublishYear,
         Book.Pages,
@@ -41,10 +42,11 @@ export const getBookById = async (id) => {
         Book.AvailableCopies
       FROM Book
       JOIN Author ON Book.AuthorID = Author.AuthorID
+      JOIN Publisher ON Book.PublisherID = Publisher.PublisherID
       WHERE Book.BookID = $1;
     `;
     const result = await pool.query(query, [id]);
-    return result.rows[0]; // A book with the author's name or undefined if not valid
+    return result.rows[0]; // A single book with author and publisher names
   } catch (error) {
     console.error('An error occurred during querying by ID', error.message);
     throw error;
@@ -59,7 +61,7 @@ export const getBookByName = async (name) => {
         Book.BookId,
         Book.BookTitle,
         CONCAT(Author.AuthorFirstName, ' ', Author.AuthorLastName) AS AuthorName,
-        Book.PublisherID,
+        Publisher.PublisherName,
         Book.ISBN,
         Book.PublishYear,
         Book.Pages,
@@ -67,10 +69,11 @@ export const getBookByName = async (name) => {
         Book.AvailableCopies
       FROM Book
       JOIN Author ON Book.AuthorID = Author.AuthorID
+      JOIN Publisher ON Book.PublisherID = Publisher.PublisherID
       WHERE Book.BookTitle ILIKE $1;
     `;
     const result = await pool.query(query, [`%${name}%`]);
-    return result.rows; // An array with the results including authors' names
+    return result.rows; // Array of books with author and publisher names
   } catch (error) {
     console.error('An error occurred during querying by name', error.message);
     throw error;
