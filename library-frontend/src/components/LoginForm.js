@@ -19,8 +19,41 @@ class LoginForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    alert('A user logged in: ' + this.state.email);
-    this.props.onLogin(); // Call onLogin to trigger redirection
+
+    const { email, password } = this.state;
+
+    // Check if the email and password are not empty
+    if (!email || !password) {
+        this.setState({ error: 'Please fill out all fields.' });
+        return;
+      }
+
+    // Call the API to register the user
+    fetch('/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+        password: this.state.password,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error registering user');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('User logged in:', data);
+        alert('Successful login.');
+        this.props.onLogin(); 
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        this.setState({ error: 'Failed to login user. Please try again.' });
+      });
   }
 
   render() {
