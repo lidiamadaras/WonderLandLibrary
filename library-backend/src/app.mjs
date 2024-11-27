@@ -6,21 +6,21 @@ import userRoutes from './routes/userRoutes.mjs';
 const app = express();
 const port = 5000;
 
-// Middleware-k
+// Middleware
 app.use(morgan('dev'));
 app.use(express.json());
 
-// Útvonalak regisztrálása
+// Register routes
 app.use('/api/books', bookRoutes);
 app.use('/api/users', userRoutes);
 
-// Hibakezelő middleware
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Belső szerver hiba.' });
+  res.status(500).json({ error: 'Internal server error.' });
 });
 
-// Szerver indítása
+// Start server
 app.listen(port, () => {
-  console.log(`Backend fut a http://localhost:${port} címen`);
+  console.log(`Backend is running on http://localhost:${port}`);
 });

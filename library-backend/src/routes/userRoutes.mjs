@@ -1,14 +1,13 @@
 import express from 'express';
-import { registerUser, registerAdmin } from '../controllers/userController.mjs';
+import { registerUser, registerAdmin, loginUser } from '../controllers/userController.mjs';
 
 const router = express.Router();
 
-// Regisztráció végpont
-
-
-
+// Registration endpoints
 router.post('/register', registerUser);
-
 router.post('/register-admin', registerAdmin);
+
+// Login endpoint
+router.post('/login', loginUser);
 
 export default router;

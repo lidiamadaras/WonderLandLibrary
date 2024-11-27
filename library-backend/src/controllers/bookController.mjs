@@ -1,46 +1,46 @@
 import { getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
 
-// Összes könyv lekérdezése
+// GET all books
 export const getAllBooksController = async (req, res) => {
   try {
     const books = await getAllBooks();
     res.status(200).json({ books });
   } catch (error) {
-    res.status(500).json({ error: 'Nem sikerült az összes könyvet lekérdezni.' });
+    res.status(500).json({ error: 'An error occured during querying' });
   }
 };
 
-// Könyv lekérdezése ID alapján
+// Search book by ID
 export const getBookByIdController = async (req, res) => {
   const { id } = req.params;
 
   try {
     const book = await getBookById(id);
     if (!book) {
-      return res.status(404).json({ error: 'A megadott ID-val nem található könyv.' });
+      return res.status(404).json({ error: 'Cannot find book with the given ID' });
     }
     res.status(200).json({ book });
   } catch (error) {
-    res.status(500).json({ error: 'Nem sikerült a könyvet ID alapján lekérdezni.' });
+    res.status(500).json({ error: 'An error occurred during querying' });
   }
 };
 
-// Könyv lekérdezése név alapján
+// Search book by name
 export const getBookByNameController = async (req, res) => {
   const { name } = req.query;
 
   if (!name) {
-    return res.status(400).json({ error: 'A név megadása kötelező a kereséshez.' });
+    return res.status(400).json({ error: 'The name field is required!' });
   }
 
   try {
-    const books = await getBookByName(name); // Adatbázis hívás
+    const books = await getBookByName(name); // get from database
     if (books.length === 0) {
-      return res.status(404).json({ error: 'A megadott névvel nem található könyv.' });
+      return res.status(404).json({ error: 'Cannot find book with the given name' });
     }
     res.status(200).json({ books });
   } catch (error) {
-    console.error('Hiba a név szerinti lekérdezés során:', error.message);
-    res.status(500).json({ error: 'Nem sikerült a könyvet név alapján lekérdezni.' });
+    console.error('An error occurred during querying', error.message);
+    res.status(500).json({ error: 'An error occurred during querying' });
   }
 };
