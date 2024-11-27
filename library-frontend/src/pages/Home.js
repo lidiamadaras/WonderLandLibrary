@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../css/Home.css';
+import BookList from '../books/BookList';
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState(''); // Search bar value
@@ -54,8 +55,10 @@ function Home() {
     event.preventDefault(); // Prevent page reload
     if (searchQuery.trim() === '') {
       fetchBooks(); // Fetch all books if searchQuery is empty
+      //maybe add here the dispply of books with BookList?
     } else {
       fetchBooksByName(searchQuery); // Fetch books by name
+      //add logic to navigate to single book page
     }
   };
 
@@ -89,17 +92,12 @@ function Home() {
       {/* Loading message */}
       {loading && <p>Loading books...</p>}
 
-      {/* Books list */}
-      {!loading && books.length > 0 && (
-        <ul>
-          {books.map((book) => (
-            <li key={book.bookid}>
-              <strong>{book.booktitle}</strong> by Author ID {book.authorid}
-            </li>
-          ))}
-        </ul>
-      )}
 
+       {/* Books list */}
+       {!loading && books.length > 0 && (
+        <BookList books={books} /> 
+      )}
+      
       {/* No books found */}
       {!loading && books.length === 0 && !error && (
         <p>No books available to display.</p>
