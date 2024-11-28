@@ -39,21 +39,29 @@ class LoginForm extends React.Component {
         password: this.state.password,
       }),
     })
-      .then((response) => {
+      .then(async (response) => {
+        // Parse the response as JSON
+        const data = await response.json();
+    
         if (!response.ok) {
-          throw new Error('Error registering user');
+          // If the response status is not OK, throw an error with the backend message
+          throw new Error(data.error || 'An unknown error occurred.');
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('User logged in:', data);
+
+
+        localStorage.setItem('token', data.token);     //i am saving the logged in user's token in local storage
+    
+        // If successful, handle the response
+        //console.log('User logged in:', data.token);
         alert('Successful login.');
-        this.props.onLogin(); 
+        this.props.onLogin(); // Call the login handler
       })
       .catch((error) => {
+        // Catch and display the backend error message
         console.error('Error:', error);
-        this.setState({ error: 'Failed to login user. Please try again.' });
+        this.setState({ error: error.message }); // Update the error state with the backend message
       });
+    
   }
 
   render() {
