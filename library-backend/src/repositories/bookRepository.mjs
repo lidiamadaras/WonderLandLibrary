@@ -79,3 +79,41 @@ export const getBookByName = async (name) => {
     throw error;
   }
 };
+
+export const checkBookAvailability = async (bookId) => {
+  try {
+    const result = await pool.query('SELECT AvailableCopies FROM Book WHERE BookId = $1', [bookId]);
+    if (result.rows.length === 0) {
+      return null; 
+    }
+    return result.rows[0].availablecopies; 
+  } catch (error) {
+    console.error('Error checking book availability:', error.message);
+    throw error;
+  }
+};
+
+
+export const decrementAvailableCopies = async (bookId) => {
+  try {
+    await pool.query('UPDATE Book SET AvailableCopies = AvailableCopies - 1 WHERE BookId = $1', [bookId]);
+  } catch (error) {
+    console.error('Error decrementing available copies:', error.message);
+    throw error;
+  }
+};
+
+
+export const createLoanRecord = async (bookId, userId, loanDueDate) => {
+  try {
+    const result = await pool.query(
+      `INSERT INTO Loan (BookId, UserId, LoanDate, LoanDueDate) 
+       VALUES ($1, $2, CURRENT_TIMESTAMP, $3) RETURNING *`,
+      [bookId, userId, loanDueDate]
+    );
+    return result.rows[0]; 
+  } catch (error) {
+    console.error('Error creating loan record:', error.message);
+    throw error;
+  }
+};
