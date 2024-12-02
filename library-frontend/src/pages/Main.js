@@ -7,6 +7,7 @@ import Login from './Login';
 import Register from './Register';
 import '../css/NavBar.css';
 import '../css/Main.css';
+import BookDetails from './BookDetails';
 
 function Main() {
   return (
@@ -26,6 +27,8 @@ function Main() {
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />
+              <Route path="/books/:id" element={<BookDetails />} />
+              
             </Routes>
           </div>
         </div>
