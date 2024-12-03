@@ -6,10 +6,11 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '' };
+    this.state = { email: '', password: '', error: '', showPopup: false };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closePopup = this.closePopup.bind(this);
   }
   
 
@@ -19,13 +20,56 @@ class LoginForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    alert('A user logged in: ' + this.state.email);
-    this.props.onLogin(); // Call onLogin to trigger redirection
+
+    const { email, password } = this.state;
+
+    // Check if the email and password are not empty
+    if (!email || !password) {
+        this.setState({ error: 'Please fill out all fields.' });
+        return;
+      }
+
+    // Call the API to register the user
+    fetch('/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+        password: this.state.password,
+      }),
+    })
+      .then(async (response) => {
+        // Parse the response as JSON
+        const data = await response.json();
+    
+        if (!response.ok) {
+          // If the response status is not OK, throw an error with the backend message
+          throw new Error(data.error || 'An unknown error occurred.');
+        }
+
+
+        localStorage.setItem('token', data.token);     //i am saving the logged in user's token in local storage
+    
+        // If successful, handle the response
+        //console.log('User logged in:', data.token);
+        alert('Successful login.');
+        this.props.onLogin(); // Call the login handler
+      })
+      .catch((error) => {
+        // Catch and display the backend error message
+        console.error('Error:', error);
+        this.setState({ error: error.message }); // Update the error state with the backend message
+      });
+    
   }
 
   render() {
     const { onRegister } = this.props;
+    const { email, password, error, showPopup } = this.state;
     return (
+      <div>
       <form className="login-form" onSubmit={this.handleSubmit}>
         <label>
           Email:
@@ -55,6 +99,18 @@ class LoginForm extends React.Component {
 
 
       </form>
+      {showPopup && (
+        <div className="popup">
+          <div className="popup-content">
+            <h3>Error</h3>
+            <p>{error}</p>
+            <button className="popup-close-button" onClick={this.closePopup}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+      </div>
       
     );
   }
