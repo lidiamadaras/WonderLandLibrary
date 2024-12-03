@@ -1,4 +1,9 @@
 import { getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
+import {
+  checkBookAvailability,
+  decrementAvailableCopies,
+  createLoanRecord,
+} from '../repositories/bookRepository.mjs';
 
 // GET all books
 export const getAllBooksController = async (req, res) => {
@@ -42,5 +47,37 @@ export const getBookByNameController = async (req, res) => {
   } catch (error) {
     console.error('An error occurred during querying', error.message);
     res.status(500).json({ error: 'An error occurred during querying' });
+  }
+};
+
+// Borrow book
+export const borrowBookController = async (req, res, next) => {
+  try {
+    const { bookId } = req.body;
+    const userId = req.user.userId; 
+
+    // Check if the book is available
+    const availableCopies = await checkBookAvailability(bookId);
+    if (availableCopies === null) {
+      return res.status(404).json({ error: 'Book not found.' });
+    }
+    if (availableCopies <= 0) {
+      return res.status(400).json({ error: 'No available copies of this book.' });
+    }
+
+    // Decrease the count of available copies
+    await decrementAvailableCopies(bookId);
+
+    // Calculating DueDate
+    const loanDueDate = new Date();
+    loanDueDate.setDate(loanDueDate.getDate() + 14);
+
+    // Borrowing process
+    const loan = await createLoanRecord(bookId, userId, loanDueDate);
+
+    res.status(201).json({ message: 'Book borrowed successfully!', loan });
+  } catch (error) {
+    console.error('Error borrowing book:', error.message);
+    next(error);
   }
 };
