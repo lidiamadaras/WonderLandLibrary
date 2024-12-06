@@ -15,7 +15,7 @@ function Login() {
   const handleLogin = () => {
     // Logic for actual login can go here/
     // Redirect to the main page on successful login
-    navigate('/main');
+    navigate('/');
     console.log('User logged in');
   };
 

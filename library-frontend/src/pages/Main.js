@@ -8,6 +8,7 @@ import Register from './Register';
 import '../css/NavBar.css';
 import '../css/Main.css';
 import BookDetails from './BookDetails';
+import Profile from './Profile';
 
 function Main() {
   return (
@@ -28,6 +29,7 @@ function Main() {
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />
               <Route path="/books/:id" element={<BookDetails />} />
+              <Route path="/profile" element={<Profile />} />
               
             </Routes>
           </div>
