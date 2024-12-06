@@ -1,17 +1,15 @@
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
-// CHANGE when login api is implemented
-
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '' };
+    this.state = { email: '', password: '', error: '', showPopup: false };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closePopup = this.closePopup.bind(this);
   }
-  
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
@@ -24,9 +22,9 @@ class LoginForm extends React.Component {
 
     // Check if the email and password are not empty
     if (!email || !password) {
-        this.setState({ error: 'Please fill out all fields.' });
-        return;
-      }
+      this.setState({ error: 'Please fill out all fields.', showPopup: true });
+      return;
+    }
 
     // Call the API to register the user
     fetch('/api/users/login', {
@@ -39,56 +37,77 @@ class LoginForm extends React.Component {
         password: this.state.password,
       }),
     })
-      .then((response) => {
+      .then(async (response) => {
+        // Parse the response as JSON
+        const data = await response.json();
+
         if (!response.ok) {
-          throw new Error('Error registering user');
+          // If the response status is not OK, throw an error with the backend message
+          throw new Error(data.error || 'An unknown error occurred.');
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('User logged in:', data);
+
+        localStorage.setItem('token', data.token); // Save the logged-in user's token in local storage
+
+        // If successful, handle the response
         alert('Successful login.');
-        this.props.onLogin(); 
+        this.props.onLogin(); // Call the login handler
       })
       .catch((error) => {
-        console.error('Error:', error);
-        this.setState({ error: 'Failed to login user. Please try again.' });
+        // Catch and display the backend error message
+        this.setState({ error: error.message, showPopup: true }); // Update the error state and show popup
       });
+  }
+
+  closePopup() {
+    // Clear fields and hide the popup
+    this.setState({ email: '', password: '', error: '', showPopup: false });
   }
 
   render() {
     const { onRegister } = this.props;
+    const { email, password, error, showPopup } = this.state;
+
     return (
-      <form className="login-form" onSubmit={this.handleSubmit}>
-        <label>
-          Email:
-          <input
-            type="text"
-            name="email"
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
-        </label>
-        <br />
-        <button className="submit-login-button" type="submit">Login</button>
+      <div>
+        <form className="login-form" onSubmit={this.handleSubmit}>
+          <label>
+            Email:
+            <input
+              type="text"
+              name="email"
+              value={email}
+              onChange={this.handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Password:
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={this.handleChange}
+            />
+          </label>
+          <br />
+          <button className="submit-login-button" type="submit">Login</button>
 
-        <h4>Don't have an account? <a href="#" onClick={onRegister}>Sign up</a></h4>
+          <h4>Don't have an account? <a href="#" onClick={onRegister}>Sign up</a></h4>
+        </form>
 
-
-
-
-      </form>
-      
+        {/* Popup for error */}
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <h3>Error</h3>
+              <p>{error}</p>
+              <button className="popup-close-button" onClick={this.closePopup}>
+                OK
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     );
   }
 }

@@ -48,3 +48,18 @@
 .login-link a:hover, .register-link a:hover {
   color: #007bff;
 }
+
+.profile-link {
+  margin-left: auto;
+}
+
+.profile-icon {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.profile-icon:hover {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}

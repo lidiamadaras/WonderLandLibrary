@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../css/books/BookDetails.css';
 
 const BookDetails = () => {
@@ -7,6 +7,8 @@ const BookDetails = () => {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(''); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch book details using the ID
@@ -19,6 +21,37 @@ const BookDetails = () => {
       .catch((err) => setError(err.message)) // Handle errors
       .finally(() => setLoading(false)); // Stop loading
   }, [id]); // Re-run the effect when the ID changes
+
+
+  const handleBorrowBook = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setMessage('You need to be logged in to borrow a book.');
+        return;
+      }
+
+      // Make API request to borrow the book
+      const response = await fetch('/api/books/borrow', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bookId: id }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error borrowing the book');
+      }
+
+      setMessage(data.message); // Success message
+    } catch (error) {
+      setMessage(error.message); // Error message
+    }
+  };
+
 
   if (loading) return <p>Loading book details...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
@@ -33,6 +66,13 @@ const BookDetails = () => {
       <p><strong>Pages:</strong> {book.pages}</p>
       <p><strong>Total Copies:</strong> {book.copies}</p>
       <p><strong>Available Copies:</strong> {book.availablecopies}</p>
+
+        {localStorage.getItem('token') && book.availablecopies > 0 && (
+        <div>
+          <button  style={{ display: 'block', textAlign: 'left', marginLeft: '0'}} onClick={handleBorrowBook}>Loan</button>
+        </div>
+      )}
+
       
     </div>
   );
