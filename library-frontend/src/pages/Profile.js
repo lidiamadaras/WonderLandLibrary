@@ -13,7 +13,7 @@ const Profile = () => {
     console.log(localStorage.getItem('token'));
 
     // Redirect to login page or home
-    navigate('/');
+    navigate('/', { state: { refresh: true } });
     
   };
 
