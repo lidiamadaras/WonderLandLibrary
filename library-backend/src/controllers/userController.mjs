@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, getUserByEmail } from '../repositories/userRepository.mjs';
+import { getReservationById, getReservationsByUserId, deleteReservation } from '../repositories/userRepository.mjs';
 
 // Admin registration
 export const registerAdmin = async (req, res, next) => {
@@ -80,12 +81,44 @@ export const loginUser = async (req, res, next) => {
     // Generate JWT
     const token = jwt.sign(
       { userId: user.userid, role: user.userrole },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      process.env.JWT_SECRET
     );
 
     res.status(200).json({ message: 'Login successful!', token });
   } catch (error) {
     next(error); // Error handling
+  }
+};
+
+
+// Get all reservations for a user
+export const getUserReservations = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const reservations = await getReservationsByUserId(userId);
+
+    res.status(200).json({ reservations });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Cancel a reservation
+export const cancelReservation = async (req, res, next) => {
+  try {
+    const { reservationId } = req.params;
+    const userId = req.user.userId;
+
+    // Check if the reservation belongs to the user
+    const reservation = await getReservationById(reservationId);
+    if (!reservation || reservation.userid !== userId) {
+      return res.status(403).json({ error: 'You can only cancel your own reservations.' });
+    }
+
+  
+    await deleteReservation(reservationId);
+    res.status(200).json({ message: 'Reservation canceled successfully.' });
+  } catch (error) {
+    next(error);
   }
 };

@@ -117,3 +117,15 @@ export const createLoanRecord = async (bookId, userId, loanDueDate) => {
     throw error;
   }
 };
+
+// Create a reservation record
+export const createReservationRecord = async (bookId, userId) => {
+  const query = `
+    INSERT INTO Reservation (BookId, UserId, ReservationDate, ReservationStatus)
+    VALUES ($1, $2, CURRENT_TIMESTAMP, 'active')
+    RETURNING *;
+  `;
+  const values = [bookId, userId];
+  const result = await pool.query(query, values);
+  return result.rows[0];
+};

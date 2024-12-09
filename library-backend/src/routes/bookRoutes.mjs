@@ -5,7 +5,8 @@ import {
   getBookByNameController,
   borrowBookController,
 } from '../controllers/bookController.mjs';
-import authenticateToken from '../middlewares/authenticateToken.mjs';
+import {authenticateToken} from '../middlewares/authMiddleware.mjs';
+import { reserveBookController } from '../controllers/bookController.mjs';
 
 const router = express.Router();
 
@@ -20,5 +21,7 @@ router.get('/:id', getBookByIdController);
 
 // Könyv kölcsönzése
 router.post('/borrow', authenticateToken, borrowBookController);
+
+router.post('/reserve', authenticateToken, reserveBookController);
 
 export default router;
