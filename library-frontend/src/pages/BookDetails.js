@@ -8,6 +8,7 @@ const BookDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(''); 
+  const [refresh, setRefresh] = useState(false); // State to trigger re-fetch
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const BookDetails = () => {
       .then((data) => setBook(data.book)) // Update book state with the fetched book details
       .catch((err) => setError(err.message)) // Handle errors
       .finally(() => setLoading(false)); // Stop loading
-  }, [id]); // Re-run the effect when the ID changes
+  }, [id, refresh]); // Re-run the effect when the ID changes
 
 
   const handleBorrowBook = async () => {
@@ -47,6 +48,7 @@ const BookDetails = () => {
       }
 
       setMessage(data.message); // Success message
+      setRefresh((prev) => !prev);
     } catch (error) {
       setMessage(error.message); // Error message
     }

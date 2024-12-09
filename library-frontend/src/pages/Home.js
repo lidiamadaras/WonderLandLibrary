@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom'; // Add this
 import '../css/Home.css';
 import BookList from '../books/BookList';
 
@@ -7,6 +8,7 @@ function Home() {
   const [books, setBooks] = useState([]); // Books state
   const [error, setError] = useState(null); // Error state
   const [loading, setLoading] = useState(false); // Loading state
+  const location = useLocation();   //detects navigation changes
 
   // Handle search bar input changes
   const handleInputChange = (event) => {
@@ -65,7 +67,12 @@ function Home() {
   // Fetch all books on component mount
   useEffect(() => {
     fetchBooks();
-  }, []); // Run only once
+    //so it will reload when navigated to:
+    if (location.state?.refresh) {
+      fetchBooks();
+      window.history.replaceState({}, document.title); // Clear the state to avoid re-fetch on revisit
+    }
+  }, [location.state]); // Run only once
 
   // Render the component
   return (

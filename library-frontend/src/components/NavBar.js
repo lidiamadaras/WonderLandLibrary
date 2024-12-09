@@ -1,10 +1,20 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { CgProfile } from 'react-icons/cg';
+
 import '../css/NavBar.css';
 
 const NavBar = () => {
-  const token = localStorage.getItem('token');
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const location = useLocation();
+
+  // Listen for changes in location to update the token
+  useEffect(() => {
+    setToken(localStorage.getItem('token')); // Update token when location changes
+  }, [location]);
+
   return (
+    
     <nav className="navbar">
         <ul className="main-menu">
           <li>
@@ -18,7 +28,7 @@ const NavBar = () => {
       {token && (
         <div className="profile-link">
           <Link to="/profile">
-            <span role="img" aria-label="profile" className="profile-icon">👤</span>
+          <img src="/images/profile.jpg" alt="Profile Icon" style={{ width: '30px', height: '30px' }}  />
           </Link>
         </div>
       )}
