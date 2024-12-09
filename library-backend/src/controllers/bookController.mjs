@@ -3,6 +3,7 @@ import {
   checkBookAvailability,
   decrementAvailableCopies,
   createLoanRecord,
+  createReservationRecord
 } from '../repositories/bookRepository.mjs';
 
 // GET all books
@@ -81,3 +82,46 @@ export const borrowBookController = async (req, res, next) => {
     next(error);
   }
 };
+
+
+// Create a reservation
+export const createReservationRecordController = async (req, res, next) => {
+  try {
+    const { bookId } = req.body;
+    const userId = req.user.userId; 
+
+    const availableCopies = await checkBookAvailability(bookId);
+    if (availableCopies === null) {
+      return res.status(404).json({ error: 'Book not found.' });
+    }
+
+    const reservation = await createReservationRecord(bookId, userId);
+    res.status(201).json({ message: 'Reservation created successfully!', reservation });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// Reserve book
+export const reserveBookController = async (req, res, next) => {
+  try {
+    const { bookId } = req.body;
+    const userId = req.user.userId; // Identified user
+
+    // Check if the book exists
+    const availableCopies = await checkBookAvailability(bookId);
+    if (availableCopies === null) {
+      return res.status(404).json({ error: 'Book not found.' });
+    }
+
+    // Reservation process
+    const reservation = await createReservationRecord(bookId, userId);
+
+    res.status(201).json({ message: 'Book reserved successfully!', reservation });
+  } catch (error) {
+    console.error('Error reserving book:', error.message);
+    next(error);
+  }
+};
+
