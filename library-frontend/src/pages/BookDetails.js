@@ -9,6 +9,8 @@ const BookDetails = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(''); 
   const [refresh, setRefresh] = useState(false); // State to trigger re-fetch
+  const [refresh2, setRefresh2] = useState(false); // State to trigger re-fetch
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const BookDetails = () => {
       .then((data) => setBook(data.book)) // Update book state with the fetched book details
       .catch((err) => setError(err.message)) // Handle errors
       .finally(() => setLoading(false)); // Stop loading
-  }, [id, refresh]); // Re-run the effect when the ID changes
+  }, [id, refresh, refresh2]); // Re-run the effect when the ID changes
 
 
   const handleBorrowBook = async () => {
@@ -55,6 +57,38 @@ const BookDetails = () => {
   };
 
 
+  const handleReserveBook = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setMessage('You need to be logged in to reserve a book.');
+        return;
+      }
+
+      // Make API request to reserve the book
+      const response = await fetch('/api/books/reserve', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bookId: id }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error reserving the book');
+      }
+
+      setMessage(data.message); // Success message
+      //setRefresh((prev) => !prev); // Trigger a re-fetch or refresh
+      setRefresh2((prev) => !prev);
+    } catch (error) {
+      setMessage(error.message); // Error message
+    }
+  };
+
+
   if (loading) return <p>Loading book details...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
@@ -70,8 +104,9 @@ const BookDetails = () => {
       <p><strong>Available Copies:</strong> {book.availablecopies}</p>
 
         {localStorage.getItem('token') && book.availablecopies > 0 && (
-        <div>
+        <div className="book-buttons">
           <button  style={{ display: 'block', textAlign: 'left', marginLeft: '0'}} onClick={handleBorrowBook}>Loan</button>
+          <button style={{ display: 'block', textAlign: 'left', marginLeft: '0' }} onClick={handleReserveBook}>Reserve</button>
         </div>
       )}
 
