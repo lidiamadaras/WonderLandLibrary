@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, getUserByEmail } from '../repositories/userRepository.mjs';
-import { getReservationById, getReservationsByUserId, deleteReservation } from '../repositories/userRepository.mjs';
+import { getReservationById, getReservationsByUserId} from '../repositories/userRepository.mjs';
+import { incrementAvailableCopies, setReservationInactive } from '../repositories/bookRepository.mjs';
 
 // Admin registration
 export const registerAdmin = async (req, res, next) => {
@@ -104,6 +105,7 @@ export const getUserReservations = async (req, res, next) => {
 };
 
 // Cancel a reservation
+
 export const cancelReservation = async (req, res, next) => {
   try {
     const { reservationId } = req.params;
@@ -115,8 +117,11 @@ export const cancelReservation = async (req, res, next) => {
       return res.status(403).json({ error: 'You can only cancel your own reservations.' });
     }
 
-  
-    await deleteReservation(reservationId);
+    // Increase available copies
+    await incrementAvailableCopies(reservation.bookid);
+
+    // Inactivate reservation
+    await setReservationInactive(reservationId);
     res.status(200).json({ message: 'Reservation canceled successfully.' });
   } catch (error) {
     next(error);

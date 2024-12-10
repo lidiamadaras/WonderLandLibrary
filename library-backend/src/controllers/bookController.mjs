@@ -115,8 +115,16 @@ export const reserveBookController = async (req, res, next) => {
       return res.status(404).json({ error: 'Book not found.' });
     }
 
+    // Check if there are available copies
+    if (availableCopies <= 0) {
+      return res.status(400).json({ error: 'No available copies for this book.' });
+    }
+
     // Reservation process
     const reservation = await createReservationRecord(bookId, userId);
+
+    // Decrease available copies
+    await decrementAvailableCopies(bookId);
 
     res.status(201).json({ message: 'Book reserved successfully!', reservation });
   } catch (error) {

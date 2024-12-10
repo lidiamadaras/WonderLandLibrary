@@ -103,6 +103,27 @@ export const decrementAvailableCopies = async (bookId) => {
   }
 };
 
+export const incrementAvailableCopies = async (bookId) => {
+  try {
+    await pool.query('UPDATE Book SET AvailableCopies = AvailableCopies + 1 WHERE BookId = $1', [bookId]);
+  } catch (error) {
+    console.error('Error incrementing available copies:', error.message);
+    throw error;
+  }
+};
+
+export const setReservationInactive = async (reservationId) => {
+  try {
+    await pool.query(
+      'UPDATE Reservation SET ReservationStatus = $1 WHERE ReservationId = $2',
+      ['inactive', reservationId]
+    );
+  } catch (error) {
+    console.error('Error setting reservation to inactive:', error.message);
+    throw error;
+  }
+};
+
 
 export const createLoanRecord = async (bookId, userId, loanDueDate) => {
   try {
@@ -128,4 +149,28 @@ export const createReservationRecord = async (bookId, userId) => {
   const values = [bookId, userId];
   const result = await pool.query(query, values);
   return result.rows[0];
+};
+
+export const handleExpiredReservations = async () => {
+  try {
+    const result = await pool.query(`
+      SELECT ReservationId, BookId
+      FROM Reservation
+      WHERE ReservationStatus = 'active' 
+        AND CURRENT_TIMESTAMP > (ReservationDate + INTERVAL '7 days');
+    `);
+
+    for (const reservation of result.rows) {
+      // Set the reservation as inactive
+      await setReservationInactive(reservation.reservationid);
+
+      // Increment the available copies
+      await incrementAvailableCopies(reservation.bookid);
+    }
+
+    console.log('Expired reservations processed successfully.');
+  } catch (error) {
+    console.error('Error handling expired reservations:', error.message);
+    throw error;
+  }
 };

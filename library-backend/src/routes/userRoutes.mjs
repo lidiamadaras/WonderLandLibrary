@@ -36,7 +36,7 @@ router.get('/admin-only', authenticateToken, authorizeRole('admin'), (req, res) 
 router.get('/reservations', authenticateToken, getUserReservations);
 
 // Cancel a reservation
-router.delete('/reservations/:reservationId', authenticateToken, cancelReservation);
+router.put('/reservations/:reservationId', authenticateToken, cancelReservation);
 
 
 export default router;
