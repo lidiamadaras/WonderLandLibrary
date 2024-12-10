@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import Home from './Home';
 import NavBar from '../components/NavBar';
 import About from './About';
@@ -11,6 +11,15 @@ import BookDetails from './BookDetails';
 import Profile from './Profile';
 
 function Main() {
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const location = useLocation();
+
+  // Listen for changes in location to update the token
+  useEffect(() => {
+    setToken(localStorage.getItem('token')); // Update token when location changes
+  }, [location]);
+
+
   return (
     <div>
       <NavBar />
@@ -35,10 +44,25 @@ function Main() {
           </div>
         </div>
 
-        
         <div className="sidebar-right">
-          
+          {token && (
+            
+              <nav className="side-menu">
+                <ul>
+                  <li>
+                    <Link to="/profile">My Profile</Link>
+                  </li>
+                  <li>
+                    <Link to="/my-loans">My Loans</Link>
+                  </li>
+                  <li>
+                    <Link to="/my-reservals">My Reservals</Link>
+                  </li>
+                </ul>
+              </nav>
+          )}
         </div>
+        
       </div>
     </div>
     

@@ -51,6 +51,47 @@
     padding-left: 20px;
     padding-right: 20px;
   }
+
+
+  .book-buttons {
+    display: flex;
+    gap: 10px; /* Space between the buttons */
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
+  
+  .book-buttons button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #a22d72; /* Elegant pink/purple */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .book-buttons button:hover {
+    background-color: #8a1e62; /* Darker shade of pink/purple on hover */
+  }
+  
+  /* Mobile-friendly styles */
+  @media (max-width: 768px) {
+    .book-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .book-buttons button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+
+
+
+
+
   /* Mobile-friendly styles */
   @media (max-width: 768px) {
     h1 {

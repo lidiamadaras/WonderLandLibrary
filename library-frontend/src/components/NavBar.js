@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { CgProfile } from 'react-icons/cg';
 
 import '../css/NavBar.css';
 
