@@ -91,7 +91,7 @@ function Home() {
         <button type="submit" style={{ padding: '8px' }}>Search</button>
       </form>
 
-      <h2>Available Books</h2>
+      <h2>All Books</h2>
 
       {/* Error message */}
       {error && <p style={{ color: 'red' }}>{error}</p>}

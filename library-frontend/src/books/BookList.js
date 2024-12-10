@@ -24,7 +24,6 @@ const BookList = ({ books }) => {
 
   return (
     <div>
-      <h2>Book List</h2>
       <div className="book-grid">
         {currentBooks.map((book) => (
           <BookCard key={book.bookid} book={book} />
