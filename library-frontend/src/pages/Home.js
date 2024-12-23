@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'; // Add this
 import '../css/Home.css';
 import BookList from '../books/BookList';
 
-function Home({ sortOption }) {
+function Home({ filterOption, sortOption }) {
   const [searchQuery, setSearchQuery] = useState(''); // Search bar value
   const [books, setBooks] = useState([]); // Books state
   const [error, setError] = useState(null); // Error state
@@ -65,6 +65,12 @@ function Home({ sortOption }) {
         return books.sort((a, b) => a.booktitle.localeCompare(b.booktitle)); // Alphabetical sorting by default
     }
   };
+  const filteredBooks = filterOption === 'Available'
+  ? books.filter((book) => book.availablecopies > 0)
+  : books;
+
+// Sort filtered books
+const sortedBooks = sortBooks(filteredBooks, sortOption);
 
   useEffect(() => {
     if (books.length > 0) {
@@ -114,13 +120,12 @@ function Home({ sortOption }) {
       {loading && <p>Loading books...</p>}
 
 
-       {/* Books list */}
-       {!loading && books.length > 0 && (
-        <BookList books={books} /> 
+      {!loading && sortedBooks.length > 0 && (
+        <BookList books={sortedBooks} />
       )}
-      
+
       {/* No books found */}
-      {!loading && books.length === 0 && !error && (
+      {!loading && sortedBooks.length === 0 && !error && (
         <p>No books available to display.</p>
       )}
     </div>
