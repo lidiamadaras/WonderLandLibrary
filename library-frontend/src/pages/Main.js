@@ -13,12 +13,21 @@ import Profile from './Profile';
 function Main() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const location = useLocation();
+  const [sortOption, setSortOption] = useState('alphabetical');
+  const [filterOption, setFilterOption] = useState('All');
 
   // Listen for changes in location to update the token
   useEffect(() => {
     setToken(localStorage.getItem('token')); // Update token when location changes
   }, [location]);
 
+  const handleSortChange = (event) => {
+    setSortOption(event.target.value); // Set the sort option
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterOption(e.target.value);
+  };
 
   return (
     <div>
@@ -26,14 +35,89 @@ function Main() {
       <div className="layout-container">
         
         <div className="sidebar-left">
-          
+        <div className="sort-options">
+        <h3>Sort Options</h3>
+        <div>
+          <input
+            type="radio"
+            id="alphabetical"
+            name="sortOption"
+            value="alphabetical"
+            checked={sortOption === 'alphabetical'}
+            onChange={handleSortChange}
+          />
+          <label htmlFor="alphabetical">Ascending</label>
         </div>
+      <div>
+        <input
+          type="radio"
+          id="reverse"
+          name="sortOption"
+          value="reverse"
+          checked={sortOption === 'reverse'}
+          onChange={handleSortChange}
+        />
+        <label htmlFor="reverse">Descending</label>
+      </div>
+
+      <div>
+      <input
+        type="radio"
+        id="pageNumbersAsc"
+        name="sortOption"
+        value="pageNumbersAsc"
+        checked={sortOption === 'pageNumbersAsc'}
+        onChange={handleSortChange}
+      />
+      <label htmlFor="pageNumbersAsc">Pages (Shortest)</label>
+      </div>
+
+      <div>
+        <input
+          type="radio"
+          id="pageNumbers"
+          name="sortOption"
+          value="pageNumbers"
+          checked={sortOption === 'pageNumbers'}
+          onChange={handleSortChange}
+        />
+        <label htmlFor="pageNumbers">Pages (Longest)</label>
+      </div>
+        </div>
+      
+
+        <div className="filter-options">
+            <h3>Filters</h3>
+            <div>
+        <label>
+            <input 
+              type="radio" 
+              value="All" 
+              checked={filterOption === 'All'} 
+              onChange={handleFilterChange}
+            />
+          All Books
+        </label>
+        <label>
+          <input 
+            type="radio" 
+            value="Available" 
+            checked={filterOption === 'Available'} 
+            onChange={handleFilterChange}
+          />
+          Available Books
+        </label>
+      </div>
+
+          </div>
+        </div>
+
 
         
         <div className="main-content">
           <div className="box">
             <Routes>
-              <Route path="/" element={<Home />} index />
+              <Route path="/" element={<Home sortOption={sortOption} filterOption={filterOption} />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />

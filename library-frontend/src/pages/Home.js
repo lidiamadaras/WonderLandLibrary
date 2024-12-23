@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom'; // Add this
 import '../css/Home.css';
 import BookList from '../books/BookList';
 
-function Home() {
+function Home({ filterOption, sortOption }) {
   const [searchQuery, setSearchQuery] = useState(''); // Search bar value
   const [books, setBooks] = useState([]); // Books state
   const [error, setError] = useState(null); // Error state
@@ -53,16 +53,31 @@ function Home() {
   };
 
   // Handle search form submission
-  const handleSearch = (event) => {
-    event.preventDefault(); // Prevent page reload
-    if (searchQuery.trim() === '') {
-      fetchBooks(); // Fetch all books if searchQuery is empty
-      //maybe add here the dispply of books with BookList?
-    } else {
-      fetchBooksByName(searchQuery); // Fetch books by name
-      //add logic to navigate to single book page
+  const sortBooks = (books, option) => {
+    switch (option) {
+      case 'reverse':
+        return books.sort((a, b) => b.booktitle.localeCompare(a.booktitle));
+      case 'pageNumbers':
+        return books.sort((a, b) => b.pages - a.pages); // Sort by page count, longest to shortest
+      case 'pageNumbersAsc':
+        return books.sort((a, b) => a.pages - b.pages);
+      default:
+        return books.sort((a, b) => a.booktitle.localeCompare(b.booktitle)); // Alphabetical sorting by default
     }
   };
+  const filteredBooks = filterOption === 'Available'
+  ? books.filter((book) => book.availablecopies > 0)
+  : books;
+
+// Sort filtered books
+const sortedBooks = sortBooks(filteredBooks, sortOption);
+
+  useEffect(() => {
+    if (books.length > 0) {
+      setBooks(sortBooks([...books], sortOption));
+    }
+  }, [sortOption, books]); // Re-sort books when sortOption changes
+
 
   // Fetch all books on component mount
   useEffect(() => {
@@ -73,6 +88,11 @@ function Home() {
       window.history.replaceState({}, document.title); // Clear the state to avoid re-fetch on revisit
     }
   }, [location.state]); // Run only once
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchBooksByName(searchQuery);
+  };
 
   // Render the component
   return (
@@ -100,13 +120,12 @@ function Home() {
       {loading && <p>Loading books...</p>}
 
 
-       {/* Books list */}
-       {!loading && books.length > 0 && (
-        <BookList books={books} /> 
+      {!loading && sortedBooks.length > 0 && (
+        <BookList books={sortedBooks} />
       )}
-      
+
       {/* No books found */}
-      {!loading && books.length === 0 && !error && (
+      {!loading && sortedBooks.length === 0 && !error && (
         <p>No books available to display.</p>
       )}
     </div>
