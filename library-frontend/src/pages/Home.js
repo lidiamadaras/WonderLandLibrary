@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom'; // Add this
 import '../css/Home.css';
 import BookList from '../books/BookList';
 
-function Home() {
+function Home({ sortTrigger }) {
   const [searchQuery, setSearchQuery] = useState(''); // Search bar value
   const [books, setBooks] = useState([]); // Books state
   const [error, setError] = useState(null); // Error state
@@ -64,6 +64,12 @@ function Home() {
     }
   };
 
+  const handleSortBooks = useCallback(() => {
+    const sortedBooks = [...books].sort((a, b) => a.booktitle.localeCompare(b.booktitle));
+    setBooks(sortedBooks);
+  }, [books]);
+
+
   // Fetch all books on component mount
   useEffect(() => {
     fetchBooks();
@@ -73,6 +79,12 @@ function Home() {
       window.history.replaceState({}, document.title); // Clear the state to avoid re-fetch on revisit
     }
   }, [location.state]); // Run only once
+
+  useEffect(() => {
+    if (sortTrigger) {
+      handleSortBooks();
+    }
+  }, [sortTrigger, handleSortBooks]);
 
   // Render the component
   return (

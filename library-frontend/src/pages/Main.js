@@ -13,12 +13,16 @@ import Profile from './Profile';
 function Main() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const location = useLocation();
+  const [sortTrigger, setSortTrigger] = useState(false);
 
   // Listen for changes in location to update the token
   useEffect(() => {
     setToken(localStorage.getItem('token')); // Update token when location changes
   }, [location]);
 
+  const handleSortClick = () => {
+    setSortTrigger((prev) => !prev); // Toggle state to trigger sorting
+  };
 
   return (
     <div>
@@ -26,14 +30,17 @@ function Main() {
       <div className="layout-container">
         
         <div className="sidebar-left">
-          
+        <nav className="side-menu">
+            <h3>Sort Options</h3>
+            <button onClick={handleSortClick}>Sort Alphabetically</button>
+        </nav>
         </div>
 
         
         <div className="main-content">
           <div className="box">
             <Routes>
-              <Route path="/" element={<Home />} index />
+              <Route path="/" element={<Home sortTrigger={sortTrigger} />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />
