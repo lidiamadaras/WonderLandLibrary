@@ -13,15 +13,15 @@ import Profile from './Profile';
 function Main() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const location = useLocation();
-  const [sortTrigger, setSortTrigger] = useState(false);
+  const [sortOption, setSortOption] = useState('alphabetical');
 
   // Listen for changes in location to update the token
   useEffect(() => {
     setToken(localStorage.getItem('token')); // Update token when location changes
   }, [location]);
 
-  const handleSortClick = () => {
-    setSortTrigger((prev) => !prev); // Toggle state to trigger sorting
+  const handleSortChange = (event) => {
+    setSortOption(event.target.value); // Set the sort option
   };
 
   return (
@@ -30,17 +30,59 @@ function Main() {
       <div className="layout-container">
         
         <div className="sidebar-left">
-        <nav className="side-menu">
-            <h3>Sort Options</h3>
-            <button onClick={handleSortClick}>Sort Alphabetically</button>
-        </nav>
+        <div>
+          <input
+            type="radio"
+            id="alphabetical"
+            name="sortOption"
+            value="alphabetical"
+            checked={sortOption === 'alphabetical'}
+            onChange={handleSortChange}
+          />
+          <label htmlFor="alphabetical">Ascending</label>
+        </div>
+      <div>
+        <input
+          type="radio"
+          id="reverse"
+          name="sortOption"
+          value="reverse"
+          checked={sortOption === 'reverse'}
+          onChange={handleSortChange}
+        />
+        <label htmlFor="reverse">Descending</label>
+      </div>
+
+      <div>
+      <input
+        type="radio"
+        id="pageNumbersAsc"
+        name="sortOption"
+        value="pageNumbersAsc"
+        checked={sortOption === 'pageNumbersAsc'}
+        onChange={handleSortChange}
+      />
+      <label htmlFor="pageNumbersAsc">Pages (Shortest)</label>
+      </div>
+
+      <div>
+        <input
+          type="radio"
+          id="pageNumbers"
+          name="sortOption"
+          value="pageNumbers"
+          checked={sortOption === 'pageNumbers'}
+          onChange={handleSortChange}
+        />
+        <label htmlFor="pageNumbers">Pages (Longest)</label>
+      </div>
         </div>
 
         
         <div className="main-content">
           <div className="box">
             <Routes>
-              <Route path="/" element={<Home sortTrigger={sortTrigger} />} />
+              <Route path="/" element={<Home sortOption={sortOption} />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />
