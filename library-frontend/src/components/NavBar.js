@@ -26,8 +26,7 @@ const NavBar = () => {
 
       {token && (
         <div className="profile-link">
-          <Link to="/profile">
-          <img src="/images/profile.jpg" alt="Profile Icon" style={{ width: '30px', height: '30px' }}  />
+          <Link to="/profile">Profile
           </Link>
         </div>
       )}

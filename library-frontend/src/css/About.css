@@ -1,0 +1,22 @@
+.about-container {
+  max-width: 800px; 
+  margin: 5px auto; 
+  padding: 10px; 
+  text-align: center; 
+}
+
+.about-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem; /* Increased margin for more space under the title */
+}
+
+.about-container p {
+  font-size: 1.2rem;
+  line-height: 1.6; 
+  margin-bottom: 1.5rem;
+  text-indent: 2em; /* Indent each paragraph by 1em */
+}
+
+.indent {
+  margin-right: 1em; 
+}

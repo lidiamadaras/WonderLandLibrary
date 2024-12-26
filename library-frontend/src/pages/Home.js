@@ -14,11 +14,12 @@ function Home({ filterOption, sortOption }) {
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value); // Update searchQuery state
   };
-
+  
   // Fetch all books
   const fetchBooks = () => {
     setLoading(true);
     setError(null); // Clear any previous errors
+    console.log('Fetching all books...');
     fetch('/api/books')
       .then((response) => {
         if (!response.ok) throw new Error('Error fetching books');
@@ -33,10 +34,10 @@ function Home({ filterOption, sortOption }) {
   const fetchBooksByName = (query) => {
     setLoading(true);
     setError(null); // Clear any previous errors
-    console.log(`Searching for books with query: "${query}"`);
+    //console.log(`Searching for books with query: "${query}"`);
     fetch(`/api/books/search?name=${query}`)
       .then((response) => {
-        if (!response.ok) throw new Error('Error fetching books by name');
+        if (!response.ok) throw new Error('Could not find book with this name');
         return response.json();
       })
       .then((data) => {
@@ -48,7 +49,10 @@ function Home({ filterOption, sortOption }) {
           setBooks(data.books); // Update books state with search results
         }
       })
-      .catch((err) => setError(err.message)) // Set error message
+      .catch((error) => {
+        setError(error.message); 
+        setBooks([]); // Set books state to empty array on error
+      })
       .finally(() => setLoading(false)); // Stop loading
   };
 
@@ -73,21 +77,14 @@ function Home({ filterOption, sortOption }) {
 const sortedBooks = sortBooks(filteredBooks, sortOption);
 
   useEffect(() => {
-    if (books.length > 0) {
-      setBooks(sortBooks([...books], sortOption));
+    if (searchQuery.trim() !== '') {
+      fetchBooksByName(searchQuery); 
+      console.log('searchQuery:', searchQuery);
+    } else {
+      fetchBooks(); 
+      console.log('searchQuery No:', searchQuery);
     }
-  }, [sortOption, books]); // Re-sort books when sortOption changes
-
-
-  // Fetch all books on component mount
-  useEffect(() => {
-    fetchBooks();
-    //so it will reload when navigated to:
-    if (location.state?.refresh) {
-      fetchBooks();
-      window.history.replaceState({}, document.title); // Clear the state to avoid re-fetch on revisit
-    }
-  }, [location.state]); // Run only once
+  }, [searchQuery, location.state]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -119,14 +116,11 @@ const sortedBooks = sortBooks(filteredBooks, sortOption);
       {/* Loading message */}
       {loading && <p>Loading books...</p>}
 
-
-      {!loading && sortedBooks.length > 0 && (
-        <BookList books={sortedBooks} />
+      {searchQuery.trim() !== '' && !loading && (
+        <BookList books={books} /> 
       )}
-
-      {/* No books found */}
-      {!loading && sortedBooks.length === 0 && !error && (
-        <p>No books available to display.</p>
+      {!searchQuery.trim() && !loading && sortedBooks.length > 0 && (
+        <BookList books={sortedBooks} /> 
       )}
     </div>
   );

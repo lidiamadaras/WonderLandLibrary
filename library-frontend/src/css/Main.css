@@ -127,3 +127,41 @@
     background-color: #a22d72; /* Highlight color on hover */
     color: #fff;
   }
+
+
+
+
+
+  .sort-options, .filter-options {
+    padding: 20px; 
+    background-color: #f8f8f8; /* Light beige background */
+    border-radius: 5px; 
+    margin-bottom: 20px; 
+  }
+  
+  .sort-options h3, .filter-options h3 {
+    font-size: 18px; 
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .sort-options div, .filter-options div {
+    display: flex;
+    flex-direction: column; 
+  }
+  
+  .sort-options div input[type="radio"], 
+  .filter-options div input[type="radio"] {
+    margin-right: 5px; 
+  }
+  
+  .sort-options div label, 
+  .filter-options div label {
+    font-size: 16px; 
+    font-family: 'Open Sans', sans-serif; /* Example of a better font */
+    margin-bottom: 5px; 
+  }
+  
+  .ai{
+    margin-top: 70px;
+  }

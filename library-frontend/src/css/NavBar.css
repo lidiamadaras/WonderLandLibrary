@@ -31,7 +31,7 @@
 }
 
 /* Styling for the Login link */
-.login-link a, .register-link a {
+.login-link a, .register-link a, .profile-link {
   text-decoration: none;
   color: #333;
   font-weight: bold;
@@ -47,10 +47,6 @@
 .main-menu li a:hover,
 .login-link a:hover, .register-link a:hover {
   color: #007bff;
-}
-
-.profile-link {
-  margin-left: auto;
 }
 
 .profile-icon {
