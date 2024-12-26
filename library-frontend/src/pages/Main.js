@@ -38,6 +38,7 @@ function Main() {
         <div className="sort-options">
         <h3>Sort Options</h3>
         <div>
+        <label>
           <input
             type="radio"
             id="alphabetical"
@@ -46,9 +47,11 @@ function Main() {
             checked={sortOption === 'alphabetical'}
             onChange={handleSortChange}
           />
-          <label htmlFor="alphabetical">Ascending</label>
+          Ascending
+          </label>
         </div>
       <div>
+      <label>
         <input
           type="radio"
           id="reverse"
@@ -57,31 +60,36 @@ function Main() {
           checked={sortOption === 'reverse'}
           onChange={handleSortChange}
         />
-        <label htmlFor="reverse">Descending</label>
+        Descending
+        </label>
       </div>
 
       <div>
-      <input
-        type="radio"
-        id="pageNumbersAsc"
-        name="sortOption"
-        value="pageNumbersAsc"
-        checked={sortOption === 'pageNumbersAsc'}
-        onChange={handleSortChange}
-      />
-      <label htmlFor="pageNumbersAsc">Pages (Shortest)</label>
+        <label>
+          <input
+            type="radio"
+            id="pageNumbersAsc"
+            name="sortOption"
+            value="pageNumbersAsc"
+            checked={sortOption === 'pageNumbersAsc'}
+            onChange={handleSortChange}
+          />  
+      Pages (Shortest)
+        </label>
       </div>
 
       <div>
-        <input
-          type="radio"
-          id="pageNumbers"
-          name="sortOption"
-          value="pageNumbers"
-          checked={sortOption === 'pageNumbers'}
-          onChange={handleSortChange}
-        />
-        <label htmlFor="pageNumbers">Pages (Longest)</label>
+      <label>
+            <input 
+              type="radio"
+              id="pageNumbers"
+              name="sortOption"
+              value="pageNumbers"
+              checked={sortOption === 'pageNumbers'}
+              onChange={handleSortChange}
+            />
+          Pages (Longest)
+        </label>
       </div>
         </div>
       
@@ -134,7 +142,7 @@ function Main() {
               <nav className="side-menu">
                 <ul>
                   <li>
-                    <Link to="/profile">My Profile</Link>
+                    <Link to="/profile">My Bookshelves</Link>
                   </li>
                   <li>
                     <Link to="/my-loans">My Loans</Link>
@@ -142,9 +150,16 @@ function Main() {
                   <li>
                     <Link to="/my-reservals">My Reservals</Link>
                   </li>
+                  <li>
+                    <Link to="/profile">My Extensions</Link>
+                  </li>
+                  <li>
+                    <Link to="/profile">My Recommendations</Link>
+                  </li>
                 </ul>
               </nav>
           )}
+          <img  className="ai" src="/images/AIRabbit.png" alt="The White Rabbit" width="300"  height="400" />
         </div>
         
       </div>
