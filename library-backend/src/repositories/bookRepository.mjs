@@ -174,3 +174,55 @@ export const handleExpiredReservations = async () => {
     throw error;
   }
 };
+
+// Searching user's bookshelf
+export const findBookshelfByUser = async (userId) => {
+  const result = await pool.query(
+    `SELECT * FROM Bookshelf_List WHERE UserId = $1`,
+    [userId]
+  );
+  return result.rows[0];
+};
+
+// Creating a new bookshelf
+export const createBookshelf = async (userId) => {
+  try {
+    const userResult = await pool.query(
+      `SELECT UserFirstName FROM LibraryUser WHERE UserId = $1`,
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      throw new Error('User does not exist!');
+    }
+
+    const userFirstName = userResult.rows[0].userfirstname;
+
+    // Creating bookshelf
+    const bookshelfResult = await pool.query(
+      `INSERT INTO Bookshelf_List (UserId, BSListName, BSListDescription)
+       VALUES ($1, $2, $3)
+       RETURNING *`,
+      [
+        userId,
+        `Favorites${userId}`, // Dynamic name
+        `The bookshelf of ${userFirstName}`, // Dynamic description
+      ]
+    );
+
+    return bookshelfResult.rows[0];
+  } catch (error) {
+    console.error('Error creating bookshelf', error.message);
+    throw error;
+  }
+};
+// Adding a book to the bookshelf
+export const addBookToBookshelf = async (bookshelfListId, bookId) => {
+  const result = await pool.query(
+    `INSERT INTO Bookshelf (BookshelfListId, BookId)
+     VALUES ($1, $2)
+     RETURNING *`,
+    [bookshelfListId, bookId]
+  );
+  return result.rows[0];
+};

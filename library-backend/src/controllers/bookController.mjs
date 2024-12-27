@@ -1,10 +1,11 @@
-import { getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
+import {findBookshelfByUser, createBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
 import {
   checkBookAvailability,
   decrementAvailableCopies,
   createLoanRecord,
   createReservationRecord
 } from '../repositories/bookRepository.mjs';
+
 
 // GET all books
 export const getAllBooksController = async (req, res) => {
@@ -133,3 +134,29 @@ export const reserveBookController = async (req, res, next) => {
   }
 };
 
+export const addBookToUserBookshelf = async (req, res, next) => {
+  try {
+    const { userId, bookId } = req.body;
+
+    if (!userId || !bookId) {
+      return res.status(400).json({ error: 'UserId/BookId missing!' });
+    }
+
+    // Check if the user's bookshelf exists
+    let bookshelf = await findBookshelfByUser(userId);
+    if (!bookshelf) {
+      // Creating the bookshelf if it doesn't exist already
+      bookshelf = await createBookshelf(userId);
+    }
+
+    // Adding book to the bookshelf
+    const addedBook = await addBookToBookshelf(bookshelf.bookshelflistid, bookId);
+
+    res.status(201).json({ message: 'Added to the bookshelf successfully', book: addedBook });
+  } catch (error) {
+    if (error.code === '23505') { // Violating unique key if already exists
+      return res.status(400).json({ error: 'The book already exists in the bookshelf' });
+    }
+    next(error); // Other errors
+  }
+};
