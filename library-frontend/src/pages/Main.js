@@ -9,6 +9,7 @@ import '../css/NavBar.css';
 import '../css/Main.css';
 import BookDetails from './BookDetails';
 import Profile from './Profile';
+import AdminHome from './userPages//AdminHome';
 
 function Main() {
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -131,6 +132,7 @@ function Main() {
               <Route path="/about" element={<About />} />
               <Route path="/books/:id" element={<BookDetails />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<AdminHome />} />
               
             </Routes>
           </div>
