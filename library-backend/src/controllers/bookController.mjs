@@ -3,7 +3,12 @@ import {
   checkBookAvailability,
   decrementAvailableCopies,
   createLoanRecord,
-  createReservationRecord
+  createReservationRecord,
+  addBook, 
+  findOrCreateAuthor, 
+  findOrCreatePublisher, 
+  findOrCreateGenre,
+  linkBookWithGenre
 } from '../repositories/bookRepository.mjs';
 
 
@@ -158,5 +163,52 @@ export const addBookToUserBookshelf = async (req, res, next) => {
       return res.status(400).json({ error: 'The book already exists in the bookshelf' });
     }
     next(error); // Other errors
+  }
+};
+
+export const addBookController = async (req, res, next) => {
+  try {
+    const { 
+      title, 
+      authorFirstName, 
+      authorLastName, 
+      country, 
+      publisherName, 
+      publisherAddress, 
+      genres, // Array of genres
+      isbn, 
+      publishYear, 
+      pages, 
+      copies 
+    } = req.body;
+
+    if (!title || !authorFirstName || !authorLastName || !publisherName) {
+      return res.status(400).json({ error: 'Missing required book data.' });
+    }
+
+    // Find or create related entities
+    const author = await findOrCreateAuthor(authorFirstName, authorLastName, country);
+    const publisher = await findOrCreatePublisher(publisherName, publisherAddress);
+
+    // Add the book
+    const newBook = await addBook({
+      title,
+      authorId: author.authorid,
+      publisherId: publisher.publisherid,
+      isbn,
+      publishYear,
+      pages,
+      copies
+    });
+
+    // Process genres and link with the book
+    for (const genre of genres) {
+      const genreEntity = await findOrCreateGenre(genre.name, genre.description);
+      await linkBookWithGenre(newBook.bookid, genreEntity.genreid);
+    }
+
+    res.status(201).json({ message: 'Book successfully added.', book: newBook });
+  } catch (error) {
+    next(error);
   }
 };
