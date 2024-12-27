@@ -226,3 +226,93 @@ export const addBookToBookshelf = async (bookshelfListId, bookId) => {
   );
   return result.rows[0];
 };
+
+
+// Find or create an author
+export const findOrCreateAuthor = async (firstName, lastName, country) => {
+  const result = await pool.query(
+    `SELECT * FROM Author WHERE AuthorFirstName = $1 AND AuthorLastName = $2`,
+    [firstName, lastName]
+  );
+
+  if (result.rows.length > 0) {
+    return result.rows[0];
+  }
+
+  const insertResult = await pool.query(
+    `INSERT INTO Author (AuthorFirstName, AuthorLastName, AuthorCountry)
+     VALUES ($1, $2, $3)
+     RETURNING *`,
+    [firstName, lastName, country]
+  );
+
+  return insertResult.rows[0];
+};
+
+// Find or create a publisher
+export const findOrCreatePublisher = async (name, address) => {
+  const result = await pool.query(
+    `SELECT * FROM Publisher WHERE PublisherName = $1`,
+    [name]
+  );
+
+  if (result.rows.length > 0) {
+    return result.rows[0];
+  }
+
+  const insertResult = await pool.query(
+    `INSERT INTO Publisher (PublisherName, PublisherAddress)
+     VALUES ($1, $2)
+     RETURNING *`,
+    [name, address]
+  );
+
+  return insertResult.rows[0];
+};
+
+// Find or create a genre
+export const findOrCreateGenre = async (name, description) => {
+  const result = await pool.query(
+    `SELECT * FROM Genre WHERE GenreName = $1`,
+    [name]
+  );
+
+  if (result.rows.length > 0) {
+    return result.rows[0];
+  }
+
+  const insertResult = await pool.query(
+    `INSERT INTO Genre (GenreName, GenreDescription)
+     VALUES ($1, $2)
+     RETURNING *`,
+    [name, description]
+  );
+
+  return insertResult.rows[0];
+};
+
+// Link a book with a genre
+export const linkBookWithGenre = async (bookId, genreId) => {
+  const result = await pool.query(
+    `INSERT INTO BookGenre (BookId, GenreId)
+     VALUES ($1, $2)
+     ON CONFLICT DO NOTHING`, // Prevent duplicates
+    [bookId, genreId]
+  );
+
+  return result.rowCount > 0; // Returns true if a new row was inserted
+};
+
+// Add a new book
+export const addBook = async (bookData) => {
+  const { title, authorId, publisherId, genreId, isbn, publishYear, pages, copies } = bookData;
+
+  const result = await pool.query(
+    `INSERT INTO Book (BookTitle, AuthorID, PublisherID, ISBN, PublishYear, Pages, Copies, AvailableCopies)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $7)
+     RETURNING *`,
+    [title, authorId, publisherId, isbn, publishYear, pages, copies]
+  );
+
+  return result.rows[0];
+};
