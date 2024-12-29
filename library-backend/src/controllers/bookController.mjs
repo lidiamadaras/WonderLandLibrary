@@ -1,4 +1,4 @@
-import {findBookshelfByUser, createBookshelf, checkBookOnBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
+import {findBookshelfByUser, createBookshelf, checkBookOnBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName, getBooksFromBookshelf } from '../repositories/bookRepository.mjs';
 import {
   checkBookAvailability,
   decrementAvailableCopies,
@@ -214,5 +214,18 @@ export const addBookController = async (req, res, next) => {
     res.status(201).json({ message: 'Book successfully added.', book: newBook });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getBooksFromUserBookshelf = async (req, res, next) => {
+  try {
+    const userId = req.user.userId; // Extract userId from the token
+
+    // Fetch books from the user's bookshelf
+    const books = await getBooksFromBookshelf(userId);
+
+    res.status(200).json({ books });
+  } catch (error) {
+    next(error); // Pass the error to the error-handling middleware
   }
 };

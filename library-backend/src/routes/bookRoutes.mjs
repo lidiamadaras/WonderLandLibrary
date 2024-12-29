@@ -7,19 +7,18 @@ import {
   addBookController
 } from '../controllers/bookController.mjs';
 import {authenticateToken} from '../middlewares/authMiddleware.mjs';
-import { reserveBookController, addBookToUserBookshelf } from '../controllers/bookController.mjs';
+import { reserveBookController, addBookToUserBookshelf, getBooksFromUserBookshelf } from '../controllers/bookController.mjs';
 import authorizeRole from '../middlewares/authorizeRole.mjs';
 
 const router = express.Router();
 
 router.get('/', getAllBooksController);
 
-
 router.get('/search', getBookByNameController);
 
+router.get('/bookshelf', authenticateToken, getBooksFromUserBookshelf);
 
 router.get('/:id', getBookByIdController);
-
 
 router.post('/borrow', authenticateToken, borrowBookController);
 

@@ -326,3 +326,28 @@ export const addBook = async (bookData) => {
 
   return result.rows[0];
 };
+
+export const getBooksFromBookshelf = async (userId) => {
+  const result = await pool.query(
+    `
+    SELECT 
+      b.BookId, 
+      b.BookTitle, 
+      b.ISBN, 
+      b.PublishYear, 
+      b.Pages, 
+      b.Copies, 
+      b.AvailableCopies
+    FROM 
+      Bookshelf bs
+    INNER JOIN 
+      Bookshelf_List bl ON bs.BookshelfListId = bl.BookshelfListId
+    INNER JOIN 
+      Book b ON bs.BookId = b.BookId
+    WHERE 
+      bl.UserId = $1
+    `,
+    [userId]
+  );
+  return result.rows;
+};
