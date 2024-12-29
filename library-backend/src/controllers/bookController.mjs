@@ -1,10 +1,16 @@
-import { getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
+import {findBookshelfByUser, createBookshelf, checkBookOnBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
 import {
   checkBookAvailability,
   decrementAvailableCopies,
   createLoanRecord,
-  createReservationRecord
+  createReservationRecord,
+  addBook, 
+  findOrCreateAuthor, 
+  findOrCreatePublisher, 
+  findOrCreateGenre,
+  linkBookWithGenre
 } from '../repositories/bookRepository.mjs';
+
 
 // GET all books
 export const getAllBooksController = async (req, res) => {
@@ -133,3 +139,80 @@ export const reserveBookController = async (req, res, next) => {
   }
 };
 
+export const addBookToUserBookshelf = async (req, res, next) => {
+  try {
+    const { bookId } = req.body;
+    const userId = req.user.userId; // Extracted from the token
+
+    if (!bookId) {
+      return res.status(400).json({ error: 'BookId is required!' });
+    }
+
+    // Check if the user's bookshelf exists
+    let bookshelf = await findBookshelfByUser(userId);
+    if (!bookshelf) {
+      // Create the bookshelf if it doesn't exist
+      bookshelf = await createBookshelf(userId);
+    }
+
+    // Check if the book already exists on the bookshelf
+    const isBookAlreadyOnShelf = await checkBookOnBookshelf(bookshelf.bookshelflistid, bookId);
+    if (isBookAlreadyOnShelf) {
+      return res.status(400).json({ error: 'The book already exists on the bookshelf.' });
+    }
+
+    // Add the book to the bookshelf
+    const addedBook = await addBookToBookshelf(bookshelf.bookshelflistid, bookId);
+
+    res.status(201).json({ message: 'Book successfully added to the bookshelf!', book: addedBook });
+  } catch (error) {
+    next(error); // Handle other errors
+  }
+};
+
+export const addBookController = async (req, res, next) => {
+  try {
+    const { 
+      title, 
+      authorFirstName, 
+      authorLastName, 
+      country, 
+      publisherName, 
+      publisherAddress, 
+      genres, // Array of genres
+      isbn, 
+      publishYear, 
+      pages, 
+      copies 
+    } = req.body;
+
+    if (!title || !authorFirstName || !authorLastName || !publisherName) {
+      return res.status(400).json({ error: 'Missing required book data.' });
+    }
+
+    // Find or create related entities
+    const author = await findOrCreateAuthor(authorFirstName, authorLastName, country);
+    const publisher = await findOrCreatePublisher(publisherName, publisherAddress);
+
+    // Add the book
+    const newBook = await addBook({
+      title,
+      authorId: author.authorid,
+      publisherId: publisher.publisherid,
+      isbn,
+      publishYear,
+      pages,
+      copies
+    });
+
+    // Process genres and link with the book
+    for (const genre of genres) {
+      const genreEntity = await findOrCreateGenre(genre.name, genre.description);
+      await linkBookWithGenre(newBook.bookid, genreEntity.genreid);
+    }
+
+    res.status(201).json({ message: 'Book successfully added.', book: newBook });
+  } catch (error) {
+    next(error);
+  }
+};

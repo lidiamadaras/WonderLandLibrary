@@ -85,7 +85,7 @@ export const loginUser = async (req, res, next) => {
       process.env.JWT_SECRET
     );
 
-    res.status(200).json({ message: 'Login successful!', token });
+    res.status(200).json({ message: 'Login successful!', token, userRole: user.userrole });
   } catch (error) {
     next(error); // Error handling
   }

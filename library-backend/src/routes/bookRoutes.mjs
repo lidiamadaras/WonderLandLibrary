@@ -4,24 +4,29 @@ import {
   getBookByIdController,
   getBookByNameController,
   borrowBookController,
+  addBookController
 } from '../controllers/bookController.mjs';
 import {authenticateToken} from '../middlewares/authMiddleware.mjs';
-import { reserveBookController } from '../controllers/bookController.mjs';
+import { reserveBookController, addBookToUserBookshelf } from '../controllers/bookController.mjs';
+import authorizeRole from '../middlewares/authorizeRole.mjs';
 
 const router = express.Router();
 
-// Összes könyv lekérdezése
 router.get('/', getAllBooksController);
 
-// Könyv keresése cím alapján
+
 router.get('/search', getBookByNameController);
 
-// Könyv keresése ID alapján
+
 router.get('/:id', getBookByIdController);
 
-// Könyv kölcsönzése
+
 router.post('/borrow', authenticateToken, borrowBookController);
 
 router.post('/reserve', authenticateToken, reserveBookController);
+
+router.post('/add-to-bookshelf', authenticateToken, addBookToUserBookshelf);
+
+router.post('/add', authenticateToken, authorizeRole('admin'), addBookController);
 
 export default router;
