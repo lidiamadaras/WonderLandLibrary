@@ -1,4 +1,4 @@
-import {findBookshelfByUser, createBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
+import {findBookshelfByUser, createBookshelf, checkBookOnBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName } from '../repositories/bookRepository.mjs';
 import {
   checkBookAvailability,
   decrementAvailableCopies,
@@ -141,28 +141,32 @@ export const reserveBookController = async (req, res, next) => {
 
 export const addBookToUserBookshelf = async (req, res, next) => {
   try {
-    const { userId, bookId } = req.body;
+    const { bookId } = req.body;
+    const userId = req.user.userId; // Extracted from the token
 
-    if (!userId || !bookId) {
-      return res.status(400).json({ error: 'UserId/BookId missing!' });
+    if (!bookId) {
+      return res.status(400).json({ error: 'BookId is required!' });
     }
 
     // Check if the user's bookshelf exists
     let bookshelf = await findBookshelfByUser(userId);
     if (!bookshelf) {
-      // Creating the bookshelf if it doesn't exist already
+      // Create the bookshelf if it doesn't exist
       bookshelf = await createBookshelf(userId);
     }
 
-    // Adding book to the bookshelf
+    // Check if the book already exists on the bookshelf
+    const isBookAlreadyOnShelf = await checkBookOnBookshelf(bookshelf.bookshelflistid, bookId);
+    if (isBookAlreadyOnShelf) {
+      return res.status(400).json({ error: 'The book already exists on the bookshelf.' });
+    }
+
+    // Add the book to the bookshelf
     const addedBook = await addBookToBookshelf(bookshelf.bookshelflistid, bookId);
 
-    res.status(201).json({ message: 'Added to the bookshelf successfully', book: addedBook });
+    res.status(201).json({ message: 'Book successfully added to the bookshelf!', book: addedBook });
   } catch (error) {
-    if (error.code === '23505') { // Violating unique key if already exists
-      return res.status(400).json({ error: 'The book already exists in the bookshelf' });
-    }
-    next(error); // Other errors
+    next(error); // Handle other errors
   }
 };
 

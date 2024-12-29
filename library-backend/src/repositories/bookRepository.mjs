@@ -216,6 +216,16 @@ export const createBookshelf = async (userId) => {
     throw error;
   }
 };
+
+
+export const checkBookOnBookshelf = async (bookshelfListId, bookId) => {
+  const result = await pool.query(
+    `SELECT 1 FROM Bookshelf WHERE BookshelfListId = $1 AND BookId = $2`,
+    [bookshelfListId, bookId]
+  );
+  return result.rowCount > 0; // Return true if the book is already on the shelf
+};
+
 // Adding a book to the bookshelf
 export const addBookToBookshelf = async (bookshelfListId, bookId) => {
   const result = await pool.query(
