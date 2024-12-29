@@ -25,7 +25,7 @@ const NavBar = () => {
         </ul>
 
       {token && (
-        <div className="profile-link">
+        <div className="login-link">
           <Link to="/profile">Profile
           </Link>
         </div>
