@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, getUserByEmail } from '../repositories/userRepository.mjs';
-import { getReservationById, getReservationsByUserId, getReservationsByUser} from '../repositories/userRepository.mjs';
+import { getReservationById, getReservationsByUserId, getReservationsByUser, updateLoanDueDate, insertExtension, updateLoanWithExtensionId, checkLoanOwnership, fetchExtendedBooks} from '../repositories/userRepository.mjs';
 import { incrementAvailableCopies, setReservationInactive } from '../repositories/bookRepository.mjs';
 
 // Admin registration
@@ -137,5 +137,54 @@ export const getUserReservationDetails = async (req, res, next) => {
   } catch (error) {
     console.error("Error fetching reservations:", error.message);
     next(error); // Pass the error to the error-handling middleware
+  }
+};
+
+export const extendLoanDueDate = async (req, res, next) => {
+  try {
+    const { bookId } = req.params; 
+    const userId = req.user.userId; 
+
+    
+    const loan = await checkLoanOwnership(bookId, userId);
+    if (!loan) {
+      return res.status(403).json({ error: 'You can only extend your own active loans.' });
+    }
+
+    
+    const currentDueDate = new Date(loan.loanduedate);
+    const newDueDate = new Date(currentDueDate);
+    newDueDate.setDate(currentDueDate.getDate() + 14); 
+
+    
+    await updateLoanDueDate(loan.loanid, newDueDate);
+
+   
+    const extensionId = await insertExtension(loan.loanid, newDueDate);
+
+    
+    await updateLoanWithExtensionId(loan.loanid, extensionId);
+
+    res.status(200).json({ message: 'Loan due date extended successfully.', newDueDate });
+  } catch (error) {
+    console.error('Error extending loan due date:', error.message);
+    next(error);
+  }
+};
+
+export const getExtendedBooks = async (req, res, next) => {
+  try {
+    const userId = req.user.userId; 
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required.' });
+    }
+
+    const extendedBooks = await fetchExtendedBooks(userId);
+
+    res.status(200).json({ extendedBooks });
+  } catch (error) {
+    console.error('Error fetching extended books:', error.message);
+    next(error);
   }
 };

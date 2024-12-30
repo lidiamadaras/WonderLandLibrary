@@ -68,3 +68,97 @@ export const getReservationsByUser = async (userId) => {
   );
   return result.rows;
 };
+
+
+export const checkLoanOwnership = async (bookId, userId) => {
+  try {
+    const result = await pool.query(
+      `
+      SELECT LoanId, LoanDueDate
+      FROM Loan
+      WHERE BookId = $1 AND UserId = $2 AND ReturnDate IS NULL;
+      `,
+      [bookId, userId]
+    );
+    return result.rows[0] || null; // Ha nincs találat, visszatér null-lal
+  } catch (error) {
+    console.error('Error checking loan ownership:', error.message);
+    throw error;
+  }
+};
+
+export const updateLoanDueDate = async (loanId, newDueDate) => {
+  try {
+    await pool.query(
+      `
+      UPDATE Loan
+      SET LoanDueDate = $1
+      WHERE LoanId = $2;
+      `,
+      [newDueDate, loanId]
+    );
+  } catch (error) {
+    console.error('Error updating loan due date:', error.message);
+    throw error;
+  }
+};
+
+export const insertExtension = async (loanId, newDueDate) => {
+  try {
+    const result = await pool.query(
+      `
+      INSERT INTO Extensions (LoanId, NewDueDate)
+      VALUES ($1, $2)
+      RETURNING ExtensionId;
+      `,
+      [loanId, newDueDate]
+    );
+    return result.rows[0].extensionid;
+  } catch (error) {
+    console.error('Error inserting extension:', error.message);
+    throw error;
+  }
+};
+
+export const updateLoanWithExtensionId = async (loanId, extensionId) => {
+  try {
+    await pool.query(
+      `
+      UPDATE Loan
+      SET ExtensionId = $1
+      WHERE LoanId = $2;
+      `,
+      [extensionId, loanId]
+    );
+  } catch (error) {
+    console.error('Error updating loan with extension ID:', error.message);
+    throw error;
+  }
+};
+
+export const fetchExtendedBooks = async (userId) => {
+  try {
+    const result = await pool.query(
+      `
+      SELECT 
+        b.BookTitle,
+        b.ISBN,
+        b.PublishYear,
+        b.Pages,
+        l.LoanDate,
+        l.LoanDueDate
+      FROM Loan l
+      INNER JOIN Book b ON l.BookId = b.BookId
+      INNER JOIN Extensions e ON l.ExtensionId = e.ExtensionId
+      WHERE l.UserId = $1
+      ORDER BY e.NewDueDate DESC;
+      `,
+      [userId]
+    );
+
+    return result.rows;
+  } catch (error) {
+    console.error('Error fetching extended books from database:', error.message);
+    throw error;
+  }
+};
