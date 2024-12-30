@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom'; // Add this
 import '../../css/Home.css';
 
-function MyLoans() {
+function MyExtensions() {
   const [searchQuery, setSearchQuery] = useState(''); // Search bar value
   const [books, setBooks] = useState([]); // Books state
   const [error, setError] = useState(null); // Error state
@@ -21,11 +21,11 @@ function MyLoans() {
   // Render the component
   return (
     <div>
-      <h1>My Loans</h1>
+      <h1>My Extensions</h1>
 
       
     </div>
   );
 }
 
-export default MyLoans;
+export default MyExtensions;

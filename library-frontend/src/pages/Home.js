@@ -94,7 +94,7 @@ const sortedBooks = sortBooks(filteredBooks, sortOption);
   // Render the component
   return (
     <div>
-      <h1>Browse all books</h1>
+      <h1>Browse</h1>
 
       {/* Search form */}
       <form onSubmit={handleSearch}>
@@ -108,7 +108,6 @@ const sortedBooks = sortBooks(filteredBooks, sortOption);
         <button type="submit" style={{ padding: '8px' }}>Search</button>
       </form>
 
-      <h2>All Books</h2>
 
       {/* Error message */}
       {error && <p style={{ color: 'red' }}>{error}</p>}

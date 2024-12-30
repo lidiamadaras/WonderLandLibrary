@@ -4,7 +4,6 @@ import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import '../css/Login.css';
 import LoginForm from '../components/LoginForm';
-import { jwtDecode } from 'jwt-decode';
 
 //import RegisterForm from '../components/RegisterForm';
 
@@ -14,23 +13,13 @@ import { jwtDecode } from 'jwt-decode';
 function Login() {
   const navigate = useNavigate(); // Updated navigation method
 
-  const handleLogin = () => {
+  const handleLogin = (userRole) => {
 
     try {
-      // Get the token from local storage
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found. Please log in again.');
-      }
-
-      console.log('Token found:', token);
-
-      // Decode the token to extract user information
-      const decoded = jwtDecode(token);
-      const userRole = decoded.role; // Extract the user's role from the token
-
-      // Redirect based on the user's role
+      console.log("Userrole " +  userRole)
+      
       if (userRole === 'admin') {
+        console.log("Userrole " +  userRole)
         navigate('/admin'); // Redirect admin to admin home page
         console.log('Admin logged in');
       } else {

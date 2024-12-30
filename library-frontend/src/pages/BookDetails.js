@@ -88,6 +88,36 @@ const BookDetails = () => {
     }
   };
 
+  const handleSaveToWishlist = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setMessage('You need to be logged in to save to wishlist.');
+        return;
+      }
+
+      // Make API request to save the book to wishlist
+      const response = await fetch('/api/books/add-to-bookshelf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bookId: id }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error saving to wishlist');
+      }
+
+      setMessage(data.message); // Success message
+    } catch (error) {
+      setMessage(error.message); // Error message
+    }
+  };
+
+
 
   if (loading) return <p>Loading book details...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
@@ -107,7 +137,12 @@ const BookDetails = () => {
         <div className="book-buttons">
           <button  style={{ display: 'block', textAlign: 'left', marginLeft: '0'}} onClick={handleBorrowBook}>Loan</button>
           <button style={{ display: 'block', textAlign: 'left', marginLeft: '0' }} onClick={handleReserveBook}>Reserve</button>
+          <button
+            style={{ display: 'block', textAlign: 'left', marginLeft: '0' }} onClick={handleSaveToWishlist}>
+            Save to Wishlist
+          </button>
         </div>
+        
       )}
 
       
