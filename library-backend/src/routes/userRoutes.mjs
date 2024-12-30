@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, registerAdmin, loginUser, getUserReservationDetails } from '../controllers/userController.mjs';
+import { registerUser, registerAdmin, loginUser, getUserReservationDetails, extendLoanDueDate, getExtendedBooks } from '../controllers/userController.mjs';
 import { authenticateToken, logout } from '../middlewares/authMiddleware.mjs';
 import {
   getUserReservations,
@@ -28,8 +28,13 @@ router.get('/reservations-info', authenticateToken, getUserReservationDetails);
 
 router.get('/loans-info', authenticateToken, getUserLoans);
 
+router.get('/extensions-info', authenticateToken, getExtendedBooks);
+
 // Cancel a reservation
 router.put('/reservations/:reservationId', authenticateToken, cancelReservation);
+
+// Extend loan duration
+router.put('/extend-loan/:bookId', authenticateToken, extendLoanDueDate);
 
 
 export default router;
