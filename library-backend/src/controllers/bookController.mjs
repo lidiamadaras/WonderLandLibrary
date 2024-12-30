@@ -1,4 +1,4 @@
-import {findBookshelfByUser, createBookshelf, checkBookOnBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName, getBooksFromBookshelf } from '../repositories/bookRepository.mjs';
+import {findBookshelfByUser, createBookshelf, checkBookOnBookshelf, addBookToBookshelf, getAllBooks, getBookById, getBookByName, getBooksFromBookshelf, getLoansByUser } from '../repositories/bookRepository.mjs';
 import {
   checkBookAvailability,
   decrementAvailableCopies,
@@ -226,6 +226,18 @@ export const getBooksFromUserBookshelf = async (req, res, next) => {
 
     res.status(200).json({ books });
   } catch (error) {
+    next(error); // Pass the error to the error-handling middleware
+  }
+};
+
+export const getUserLoans = async (req, res, next) => {
+  try {
+    const userId = req.user.userId; // UserId extracted from the token
+    const loans = await getLoansByUser(userId);
+
+    res.status(200).json({ loans });
+  } catch (error) {
+    console.error("Error fetching loans:", error.message);
     next(error); // Pass the error to the error-handling middleware
   }
 };

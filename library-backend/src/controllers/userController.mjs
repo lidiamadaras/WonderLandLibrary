@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, getUserByEmail } from '../repositories/userRepository.mjs';
-import { getReservationById, getReservationsByUserId} from '../repositories/userRepository.mjs';
+import { getReservationById, getReservationsByUserId, getReservationsByUser} from '../repositories/userRepository.mjs';
 import { incrementAvailableCopies, setReservationInactive } from '../repositories/bookRepository.mjs';
 
 // Admin registration
@@ -125,5 +125,17 @@ export const cancelReservation = async (req, res, next) => {
     res.status(200).json({ message: 'Reservation canceled successfully.' });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getUserReservationDetails = async (req, res, next) => {
+  try {
+    const userId = req.user.userId; 
+    const reservations = await getReservationsByUser(userId);
+
+    res.status(200).json({ reservations });
+  } catch (error) {
+    console.error("Error fetching reservations:", error.message);
+    next(error); // Pass the error to the error-handling middleware
   }
 };

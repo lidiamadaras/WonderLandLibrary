@@ -351,3 +351,26 @@ export const getBooksFromBookshelf = async (userId) => {
   );
   return result.rows;
 };
+
+export const getLoansByUser = async (userId) => {
+  const result = await pool.query(
+    `
+    SELECT 
+        b.BookTitle, 
+        b.ISBN, 
+        b.PublishYear, 
+        b.Pages, 
+        l.LoanDate,
+        l.LoanDueDate,
+        l.ReturnDate
+    FROM 
+        Loan l
+    INNER JOIN 
+        Book b ON l.BookId = b.BookId
+    WHERE 
+        l.UserId = $1
+    `,
+    [userId]
+  );
+  return result.rows;
+};
