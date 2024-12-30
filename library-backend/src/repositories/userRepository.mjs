@@ -46,3 +46,25 @@ export const deleteReservation = async (reservationId) => {
   `;
   await pool.query(query, [reservationId]);
 };
+
+export const getReservationsByUser = async (userId) => {
+  const result = await pool.query(
+    `
+    SELECT 
+        b.BookTitle, 
+        b.ISBN, 
+        b.PublishYear, 
+        b.Pages, 
+        r.ReservationDate,
+        r.ReservationStatus
+    FROM 
+        Reservation r
+    INNER JOIN 
+        Book b ON r.BookId = b.BookId
+    WHERE 
+        r.UserId = $1
+    `,
+    [userId]
+  );
+  return result.rows;
+};
