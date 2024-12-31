@@ -116,10 +116,13 @@ const sortedBooks = sortBooks(filteredBooks, sortOption);
       {loading && <p>Loading books...</p>}
 
       {searchQuery.trim() !== '' && !loading && (
-        <BookList books={books} /> 
+        <BookList books={books} 
+        isHomePage={true}
+        /> 
       )}
       {!searchQuery.trim() && !loading && sortedBooks.length > 0 && (
-        <BookList books={sortedBooks} /> 
+        <BookList books={sortedBooks}
+        isHomePage={true} /> 
       )}
     </div>
   );

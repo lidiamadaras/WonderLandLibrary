@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BookCard from './BookCard'; // Child component
 import '../css/books/BookList.css'; // Styles
 
-const BookList = ({ books, getLoanDueDate  }) => {
+const BookList = ({ books, getLoanDueDate, isHomePage  }) => {
 
   console.log('Books in BookList:', books);
     const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +32,8 @@ const BookList = ({ books, getLoanDueDate  }) => {
         {currentBooks.map((book) => (
           <BookCard key={book.bookid} book={book} 
           extraInfo={getLoanDueDate ? getLoanDueDate(book) : null} 
+          hideButtons={isHomePage ? false : true}
+          isHomePage={isHomePage}
           />
         ))}
       </div>
