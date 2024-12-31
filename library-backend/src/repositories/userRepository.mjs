@@ -51,16 +51,21 @@ export const getReservationsByUser = async (userId) => {
   const result = await pool.query(
     `
     SELECT 
+        b.BookId,
         b.BookTitle, 
         b.ISBN, 
         b.PublishYear, 
         b.Pages, 
         r.ReservationDate,
-        r.ReservationStatus
+        r.ReservationStatus,
+        a.AuthorFirstName,
+        a.AuthorLastName
     FROM 
         Reservation r
     INNER JOIN 
         Book b ON r.BookId = b.BookId
+    INNER JOIN 
+        Author a ON b.AuthorID = a.AuthorId
     WHERE 
         r.UserId = $1
     `,
@@ -141,15 +146,19 @@ export const fetchExtendedBooks = async (userId) => {
     const result = await pool.query(
       `
       SELECT 
+        b.BookId,
         b.BookTitle,
         b.ISBN,
         b.PublishYear,
         b.Pages,
         l.LoanDate,
-        l.LoanDueDate
+        l.LoanDueDate,
+        a.AuthorFirstName,
+        a.AuthorLastName
       FROM Loan l
       INNER JOIN Book b ON l.BookId = b.BookId
       INNER JOIN Extensions e ON l.ExtensionId = e.ExtensionId
+      INNER JOIN Author a ON b.AuthorID = a.AuthorId
       WHERE l.UserId = $1
       ORDER BY e.NewDueDate DESC;
       `,

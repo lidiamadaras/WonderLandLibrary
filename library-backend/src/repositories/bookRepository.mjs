@@ -337,13 +337,17 @@ export const getBooksFromBookshelf = async (userId) => {
       b.PublishYear, 
       b.Pages, 
       b.Copies, 
-      b.AvailableCopies
+      b.AvailableCopies,
+      a.AuthorFirstName,
+      a.AuthorLastName
     FROM 
       Bookshelf bs
     INNER JOIN 
       Bookshelf_List bl ON bs.BookshelfListId = bl.BookshelfListId
     INNER JOIN 
       Book b ON bs.BookId = b.BookId
+    INNER JOIN 
+      Author a ON b.AuthorID = a.AuthorId
     WHERE 
       bl.UserId = $1
     `,
@@ -356,17 +360,22 @@ export const getLoansByUser = async (userId) => {
   const result = await pool.query(
     `
     SELECT 
+        b.BookId,
         b.BookTitle, 
         b.ISBN, 
         b.PublishYear, 
         b.Pages, 
         l.LoanDate,
         l.LoanDueDate,
-        l.ReturnDate
+        l.ReturnDate,
+        a.AuthorFirstName,
+        a.AuthorLastName
     FROM 
         Loan l
     INNER JOIN 
         Book b ON l.BookId = b.BookId
+    INNER JOIN 
+        Author a ON b.AuthorID = a.AuthorId
     WHERE 
         l.UserId = $1
     `,
