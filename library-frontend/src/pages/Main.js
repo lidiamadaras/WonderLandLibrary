@@ -162,7 +162,7 @@ function Main() {
                     <Link to="/my-loans">My Loans</Link>
                   </li>
                   <li>
-                    <Link to="/my-reservals">My Reservals</Link>
+                    <Link to="/my-reservals">My Reservations</Link>
                   </li>
                   <li>
                     <Link to="/my-extensions">My Extensions</Link>
