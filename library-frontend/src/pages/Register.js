@@ -13,7 +13,7 @@ function Register() {
   const handleRegister = () => {
     // Logic for actual login can go here/
     // Redirect to the main page on successful login
-    navigate('/main');
+    navigate('/login');
     console.log('User registered');
   };
 

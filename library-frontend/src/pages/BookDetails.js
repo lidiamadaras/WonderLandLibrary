@@ -13,6 +13,8 @@ const BookDetails = () => {
 
   const navigate = useNavigate();
 
+  console.log(id);
+
   useEffect(() => {
     // Fetch book details using the ID
     fetch(`/api/books/${id}`) // Replace with your actual API endpoint
