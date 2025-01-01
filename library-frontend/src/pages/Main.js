@@ -9,6 +9,13 @@ import '../css/NavBar.css';
 import '../css/Main.css';
 import BookDetails from './BookDetails';
 import Profile from './Profile';
+import AdminHome from './userPages/AdminHome';
+import AddBook from './userPages/AddBook';
+import WishList from './userPages/WishList';
+import MyReservals from './userPages/MyReservals';
+import MyExtensions from './userPages/MyExtensions';
+import MyLoans from './userPages/MyLoans';
+import MyRecommendations from './userPages/MyRecommendations';
 
 function Main() {
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -131,6 +138,13 @@ function Main() {
               <Route path="/about" element={<About />} />
               <Route path="/books/:id" element={<BookDetails />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<AdminHome />} />
+              <Route path="/add-book" element={<AddBook />} />
+              <Route path="/wishlist" element={<WishList />} />
+              <Route path="/my-loans" element={<MyLoans />} />
+              <Route path="/my-reservals" element={<MyReservals />} />
+              <Route path="/my-extensions" element={<MyExtensions />} />
+              <Route path="/my-recommendations" element={<MyRecommendations />} />
               
             </Routes>
           </div>
@@ -142,19 +156,19 @@ function Main() {
               <nav className="side-menu">
                 <ul>
                   <li>
-                    <Link to="/profile">My Bookshelves</Link>
+                    <Link to="/wishlist">Wishlist</Link>
                   </li>
                   <li>
                     <Link to="/my-loans">My Loans</Link>
                   </li>
                   <li>
-                    <Link to="/my-reservals">My Reservals</Link>
+                    <Link to="/my-reservals">My Reservations</Link>
                   </li>
                   <li>
-                    <Link to="/profile">My Extensions</Link>
+                    <Link to="/my-extensions">My Extensions</Link>
                   </li>
                   <li>
-                    <Link to="/profile">My Recommendations</Link>
+                    <Link to="/my-recommendations">My Recommendations</Link>
                   </li>
                 </ul>
               </nav>

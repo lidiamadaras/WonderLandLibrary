@@ -47,10 +47,12 @@ class LoginForm extends React.Component {
         }
 
         localStorage.setItem('token', data.token); // Save the logged-in user's token in local storage
+        localStorage.setItem('userRole', data.userRole);
+
 
         // If successful, handle the response
         alert('Successful login.');
-        this.props.onLogin(); // Call the login handler
+        this.props.onLogin(data.userRole); // Call the login handler
       })
       .catch((error) => {
         // Catch and display the backend error message

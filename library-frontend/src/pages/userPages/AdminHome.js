@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useLocation } from 'react-router-dom'; // Add this
-import '../css/Home.css';
-import BookList from '../books/BookList';
+import { useLocation, useNavigate } from 'react-router-dom'; // Add this
+import '../../css/Home.css';
+import BookList from '../../books/BookList';
 
-function Home({ filterOption, sortOption }) {
+function AdminHome({ filterOption, sortOption }) {
   const [searchQuery, setSearchQuery] = useState(''); // Search bar value
   const [books, setBooks] = useState([]); // Books state
   const [error, setError] = useState(null); // Error state
   const [loading, setLoading] = useState(false); // Loading state
   const location = useLocation();   //detects navigation changes
+  const navigate = useNavigate();
 
   // Handle search bar input changes
   const handleInputChange = (event) => {
@@ -91,6 +92,10 @@ const sortedBooks = sortBooks(filteredBooks, sortOption);
     fetchBooksByName(searchQuery);
   };
 
+  const handleAddBook = () => {
+    navigate('/add-book');
+  };
+
   // Render the component
   return (
     <div>
@@ -109,6 +114,21 @@ const sortedBooks = sortBooks(filteredBooks, sortOption);
       </form>
 
 
+      <button
+        onClick={handleAddBook}
+        style={{
+          padding: '8px',
+          margin: '10px 0',
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+      >
+        Add Book
+      </button>
+
       {/* Error message */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -116,16 +136,13 @@ const sortedBooks = sortBooks(filteredBooks, sortOption);
       {loading && <p>Loading books...</p>}
 
       {searchQuery.trim() !== '' && !loading && (
-        <BookList books={books} 
-        isHomePage={true}
-        /> 
+        <BookList books={books} /> 
       )}
       {!searchQuery.trim() && !loading && sortedBooks.length > 0 && (
-        <BookList books={sortedBooks}
-        isHomePage={true} /> 
+        <BookList books={sortedBooks} /> 
       )}
     </div>
   );
 }
 
-export default Home;
+export default AdminHome;
