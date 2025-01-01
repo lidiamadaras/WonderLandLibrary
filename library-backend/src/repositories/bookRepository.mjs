@@ -383,3 +383,18 @@ export const getLoansByUser = async (userId) => {
   );
   return result.rows;
 };
+
+export const addRecommendation = async (userId) => {
+  const result = await pool.query(
+    `INSERT INTO Recommendation (UserId) VALUES ($1) RETURNING RecommendationId`,
+    [userId]
+  );
+  return result.rows[0].recommendationid;
+};
+
+export const linkRecommendationWithBook = async (recommendationId, bookId, reason) => {
+  await pool.query(
+    `INSERT INTO RecommendationBook (RecommendationId, BookId, Reason) VALUES ($1, $2, $3)`,
+    [recommendationId, bookId, reason]
+  );
+};

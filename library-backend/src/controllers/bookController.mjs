@@ -172,45 +172,7 @@ export const addBookToUserBookshelf = async (req, res, next) => {
 
 export const addBookController = async (req, res, next) => {
   try {
-    const { 
-      title, 
-      authorFirstName, 
-      authorLastName, 
-      country, 
-      publisherName, 
-      publisherAddress, 
-      genres, // Array of genres
-      isbn, 
-      publishYear, 
-      pages, 
-      copies 
-    } = req.body;
-
-    if (!title || !authorFirstName || !authorLastName || !publisherName) {
-      return res.status(400).json({ error: 'Missing required book data.' });
-    }
-
-    // Find or create related entities
-    const author = await findOrCreateAuthor(authorFirstName, authorLastName, country);
-    const publisher = await findOrCreatePublisher(publisherName, publisherAddress);
-
-    // Add the book
-    const newBook = await addBook({
-      title,
-      authorId: author.authorid,
-      publisherId: publisher.publisherid,
-      isbn,
-      publishYear,
-      pages,
-      copies
-    });
-
-    // Process genres and link with the book
-    for (const genre of genres) {
-      const genreEntity = await findOrCreateGenre(genre.name, genre.description);
-      await linkBookWithGenre(newBook.bookid, genreEntity.genreid);
-    }
-
+    const newBook = await saveBook(req.body);
     res.status(201).json({ message: 'Book successfully added.', book: newBook });
   } catch (error) {
     next(error);
@@ -221,8 +183,8 @@ export const getBooksFromUserBookshelf = async (req, res, next) => {
   try {
     const userId = req.user.userId; // Extract userId from the token
 
-    // Fetch books from the user's bookshelf
-    const books = await getBooksFromBookshelf(userId);
+    // Fetch books using the helper function
+    const books = await fetchBooksForUser(userId);
 
     res.status(200).json({ books });
   } catch (error) {
@@ -240,4 +202,43 @@ export const getUserLoans = async (req, res, next) => {
     console.error("Error fetching loans:", error.message);
     next(error); // Pass the error to the error-handling middleware
   }
+};
+
+export const fetchBooksForUser = async (userId) => {
+  return await getBooksFromBookshelf(userId);
+};
+
+export const saveBook = async ({
+  title,
+  authorFirstName,
+  authorLastName,
+  publisherName,
+  genres = [],
+  isbn,
+  publishYear,
+  pages,
+  copies,
+}) => {
+  
+  const author = await findOrCreateAuthor(authorFirstName, authorLastName);
+  const publisher = await findOrCreatePublisher(publisherName);
+
+  
+  const newBook = await addBook({
+    title,
+    authorId: author.authorid,
+    publisherId: publisher.publisherid,
+    isbn,
+    publishYear,
+    pages,
+    copies,
+  });
+
+  
+  for (const genre of genres) {
+    const genreEntity = await findOrCreateGenre(genre.name, genre.description);
+    await linkBookWithGenre(newBook.bookid, genreEntity.genreid);
+  }
+
+  return newBook; 
 };
