@@ -171,3 +171,25 @@ export const fetchExtendedBooks = async (userId) => {
     throw error;
   }
 };
+
+export const fetchRecommendationsForUser = async (userId) => {
+  const query = `
+    SELECT 
+      b.BookId,
+      b.BookTitle,
+      a.AuthorFirstName,
+      a.AuthorLastName,
+      p.PublisherName,
+      rb.Reason
+    FROM Recommendation r
+    INNER JOIN RecommendationBook rb ON r.RecommendationId = rb.RecommendationId
+    INNER JOIN Book b ON rb.BookId = b.BookId
+    INNER JOIN Author a ON b.AuthorID = a.AuthorId
+    INNER JOIN Publisher p ON b.PublisherID = p.PublisherId
+    WHERE r.UserId = $1
+    ORDER BY r.RecommendationDateCreated DESC
+  `;
+
+  const result = await pool.query(query, [userId]);
+  return result.rows;
+};

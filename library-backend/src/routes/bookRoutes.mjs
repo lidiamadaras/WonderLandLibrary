@@ -9,6 +9,7 @@ import {
 import {authenticateToken} from '../middlewares/authMiddleware.mjs';
 import { reserveBookController, addBookToUserBookshelf, getBooksFromUserBookshelf } from '../controllers/bookController.mjs';
 import authorizeRole from '../middlewares/authorizeRole.mjs';
+import { recommendBooks } from '../controllers/ai_controller.mjs';
 
 const router = express.Router();
 
@@ -27,5 +28,7 @@ router.post('/reserve', authenticateToken, reserveBookController);
 router.post('/add-to-bookshelf', authenticateToken, addBookToUserBookshelf);
 
 router.post('/add', authenticateToken, authorizeRole('admin'), addBookController);
+
+router.post('/recommend-books', authenticateToken, recommendBooks);
 
 export default router;

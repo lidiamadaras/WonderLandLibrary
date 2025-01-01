@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, getUserByEmail } from '../repositories/userRepository.mjs';
-import { getReservationById, getReservationsByUserId, getReservationsByUser, updateLoanDueDate, insertExtension, updateLoanWithExtensionId, checkLoanOwnership, fetchExtendedBooks} from '../repositories/userRepository.mjs';
+import { getReservationById, getReservationsByUserId, getReservationsByUser, updateLoanDueDate, insertExtension, updateLoanWithExtensionId, checkLoanOwnership, fetchExtendedBooks, fetchRecommendationsForUser} from '../repositories/userRepository.mjs';
 import { incrementAvailableCopies, setReservationInactive } from '../repositories/bookRepository.mjs';
 
 // Admin registration
@@ -185,6 +185,24 @@ export const getExtendedBooks = async (req, res, next) => {
     res.status(200).json({ extendedBooks });
   } catch (error) {
     console.error('Error fetching extended books:', error.message);
+    next(error);
+  }
+};
+
+export const getRecommendationsForUser = async (req, res, next) => {
+  try {
+    const userId = req.user.userId; 
+
+    
+    const recommendations = await fetchRecommendationsForUser(userId);
+
+    if (recommendations.length === 0) {
+      return res.status(200).json({ message: 'No recommendations found for this user.' });
+    }
+
+    res.status(200).json({ recommendations });
+  } catch (error) {
+    console.error('Error fetching recommendations:', error.message);
     next(error);
   }
 };
