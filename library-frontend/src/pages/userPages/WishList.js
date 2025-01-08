@@ -32,7 +32,7 @@ const Wishlist = () => {
         }
 
         const data = await response.json();
-        setWishlist(data.wishlist || []); // Assuming the API returns an array of wishlist items
+        setWishlist(data.books || []); // Assuming the API returns an array of wishlist items
         console.log("Wishlist: " + data.wishlist);
       } catch (error) {
         setError(error.message);

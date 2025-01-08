@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/books/BookCard.css';
 
-const BookCard = ({ book, extraInfo, hideButtons, isHomePage }) => {
+const BookCard = ({ book, extraInfo, hideButtons, isHomePage, isLoan }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -10,7 +10,8 @@ const BookCard = ({ book, extraInfo, hideButtons, isHomePage }) => {
     console.log('BookId:', bookId);
     if (bookId) {
       // Pass a state parameter indicating it's from "My Loans"
-      navigate(`/books/${bookId}`, { state: { hideButtons: hideButtons } });
+      navigate(`/books/${bookId}`, { state: { hideButtons: hideButtons, isLoan: isLoan } });
+
     } else {
       console.error('No valid bookid found!');
     }

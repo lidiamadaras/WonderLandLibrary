@@ -15,8 +15,7 @@ const BookDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const hideButtons = location.state?.hideButtons
-
-  console.log(id);
+  const isLoan = location.state?.isLoan;
 
   useEffect(() => {
     // Fetch book details using the ID
@@ -132,7 +131,7 @@ const BookDetails = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/loans/extend-loan/${id}`, {
+      const response = await fetch(`/api/extend-loan/${id}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -185,7 +184,7 @@ const BookDetails = () => {
         
         
       )}
-      {loanId && (
+      {isLoan && localStorage.getItem('token') && book.availablecopies > 0 &&(
         <div>
           <button className="extend-loan-button" onClick={handleExtendLoan}>
             Extend Loan

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BookCard from './BookCard'; // Child component
 import '../css/books/BookList.css'; // Styles
 
-const BookList = ({ books, getLoanDueDate, isHomePage  }) => {
+const BookList = ({ books, getLoanDueDate, isHomePage, isLoan  }) => {
 
   console.log('Books in BookList:', books);
     const [currentPage, setCurrentPage] = useState(1);
@@ -34,6 +34,7 @@ const BookList = ({ books, getLoanDueDate, isHomePage  }) => {
           extraInfo={getLoanDueDate ? getLoanDueDate(book) : null} 
           hideButtons={isHomePage ? false : true}
           isHomePage={isHomePage}
+          isLoan={isLoan}
           />
         ))}
       </div>
