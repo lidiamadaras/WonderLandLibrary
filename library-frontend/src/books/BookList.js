@@ -34,7 +34,7 @@ const BookList = ({ books, getLoanDueDate, isHomePage, isLoan  }) => {
           extraInfo={getLoanDueDate ? getLoanDueDate(book) : null} 
           hideButtons={isHomePage ? false : true}
           isHomePage={isHomePage}
-          isLoan={isLoan}
+          isLoan
           />
         ))}
       </div>
