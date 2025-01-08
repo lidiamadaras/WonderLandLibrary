@@ -66,6 +66,7 @@ const MyLoans = () => {
             }
             return 'No due date available';
           }}
+          isLoan={true}
           /> // Reuse BookList to display loaned books
         ) : (
           <p>You have no active loans.</p>

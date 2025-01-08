@@ -32,7 +32,7 @@ const MyExtensions = () => {
         }
 
         const data = await response.json();
-        setExtensions(data.extensions || []); // Assuming the API returns an array of extensions
+        setExtensions(data.extendedBooks || []); // Assuming the API returns an array of extensions
       } catch (error) {
         setError(error.message);
       } finally {

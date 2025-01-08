@@ -47,6 +47,7 @@ class LoginForm extends React.Component {
         }
 
         localStorage.setItem('token', data.token); // Save the logged-in user's token in local storage
+        console.log(data.token);
         localStorage.setItem('userRole', data.userRole);
 
 
